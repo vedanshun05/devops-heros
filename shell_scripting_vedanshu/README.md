@@ -8,17 +8,9 @@
 
 ![task.sh](outputs/task.sh.png)
 
-### variable.sh
-
-![variable.sh](outputs/variable.sh.png)
-
 ### input.sh
 
 ![input.sh](outputs/input.sh.png)
-
-### data.sh
-
-![data.sh](outputs/data.sh.png)
 
 ### condition.sh
 
@@ -38,7 +30,9 @@
 
 ### while_loop.sh
 
-![while_loop.sh](outputs/while_loop.sh.png)
+It repeatedly takes input, quits on q, rejects non-numbers, and prints valid numbers until you quit.
+
+![while_loop_number](/home/vedu/Work/Year 3 Term 1/DevOps/devops-heros/shell_scripting_vedanshu/outputs/while_loop_number.png)
 
 ### function.sh
 
