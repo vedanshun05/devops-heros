@@ -32,7 +32,7 @@
 
 It repeatedly takes input, quits on q, rejects non-numbers, and prints valid numbers until you quit.
 
-![while_loop_number](/home/vedu/Work/Year 3 Term 1/DevOps/devops-heros/shell_scripting_vedanshu/outputs/while_loop_number.png)
+![while_loop_number](outputs/while_loop_number.png)
 
 ### function.sh
 
