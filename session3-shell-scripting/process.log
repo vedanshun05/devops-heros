@@ -1,0 +1,4 @@
+    PID TTY          TIME CMD
+2267807 pts/4    00:00:00 bash
+2379617 pts/4    00:00:00 task.sh
+2385802 pts/4    00:00:00 ps
