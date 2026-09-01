@@ -8,4 +8,4 @@ Resources:
 
 ![Screenshot](screenshot-2026-09-01_17-45-38.png)
 
-![Screenshot](Pasted image.png)
+![Screenshot](Pasted%20image.png)
