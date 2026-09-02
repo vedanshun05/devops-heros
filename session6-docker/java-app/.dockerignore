@@ -1,0 +1,7 @@
+target/
+*.jar
+!src/
+!pom.xml
+!.dockerignore
+!Dockerfile
+.git/
