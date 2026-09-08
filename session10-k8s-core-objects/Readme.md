@@ -8,3 +8,5 @@
 ![desc](./Outputs/kubectl_desc.png)
 ![image error](./Outputs/kubectl_image_error.png)
 ![readiness](./Outputs/kubectl_readiness.png)
+![deploy](./Outputs/deployment.png)
+![term deploy](./Outputs/terminating_deployment.png)
