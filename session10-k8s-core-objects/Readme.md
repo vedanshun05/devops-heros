@@ -12,3 +12,6 @@
 # Deployment
 ![deploy](./Outputs/deployment.png)
 ![term deploy](./Outputs/terminating_deployment.png)
+![rs](./Outputs/replicaset.png)
+![rs scale](./Outputs/rs_scale.png)
+![rs scale down](./Outputs/rs_scale_down.png)
