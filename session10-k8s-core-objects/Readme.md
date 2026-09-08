@@ -4,5 +4,6 @@
 
 ![apply](./Outputs/kubectl_apply.png)
 ![logs and pods](./Outputs/kubectl_logs_and_get_pods.png)
+![get pods](./Outputs/kubectl_get_pods.png)
 ![desc](./Outputs/kubectl_desc.png)
 
