@@ -127,19 +127,34 @@ kubectl exec -it dns-test-client -- nslookup external-database-service
 
 Expected Output:
 ```text
-Server:    10.96.0.10
-Address:   10.96.0.10#53
-
-external-database-service.default.svc.cluster.local  canonical name = api.github.com.
+external-database-service.default.svc.cluster.local  canonical name = api.github.com
 Name:      api.github.com
-Address:   140.82.121.6
+Address:   20.207.73.85
 ```
-Notice how CoreDNS returned `canonical name = api.github.com`!
+
+The `NXDOMAIN` lines that `nslookup` prints for `external-database-service.svc.cluster.local` and for the tailnet search domain are **expected noise**. The resolver walks the search list before it reaches `default.svc.cluster.local`, and `nslookup` exits with code `1` because of those failed lookups. The `canonical name` line is the real answer.
+
+For a clean single-line proof, use `getent` instead:
+```bash
+kubectl exec -it dns-test-client -- getent hosts external-database-service
+```
+
+Expected Output:
+```text
+20.207.73.85      api.github.com  api.github.com external-database-service
+```
+
+Notice how CoreDNS returned `canonical name = api.github.com` and the IP of the external host.
+
+> The `externalName` must point at a domain that actually resolves in public DNS. If it does not, `nslookup` still shows the CNAME, but the address lookup fails and every client gets `curl: (6) Could not resolve host`.
 
 ### Step 4: Test HTTP Request
+The alias name differs from the certificate presented by the external server, so `-k` is required to skip certificate validation (the `Host` header keeps the routing correct):
 ```bash
-kubectl exec -it dns-test-client -- curl -s -H "Host: api.github.com" https://external-database-service
+kubectl exec -it dns-test-client -- curl -s -k -H "Host: api.github.com" https://external-database-service
 ```
+
+Without `-k`, curl stops with `exit code 60` (SSL certificate problem) because the SNI name `external-database-service` does not match the `*.github.com` certificate.
 
 Expected Output (GitHub API JSON):
 ```json
