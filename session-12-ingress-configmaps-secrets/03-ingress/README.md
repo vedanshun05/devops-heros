@@ -122,6 +122,8 @@ yatri-ingress   nginx   yatri.local  192.168.49.2   80      12s
 
 ## Hands-on: Host-Based Routing and TLS/HTTPS Termination
 
+> **Prerequisite:** the rules below point at `yatri-frontend-service` and `yatri-backend-service`, which are created by the `04-full-demo` manifests. Apply those first (`kubectl apply -f 04-full-demo/configmap.yaml -f 04-full-demo/secret.yaml -f 04-full-demo/frontend.yaml -f 04-full-demo/backend.yaml`). If the Services do not exist, the Ingress answers `503 Service Temporarily Unavailable`.
+
 ### Step 1: Generate a Self-Signed TLS Certificate
 To secure your Ingress with HTTPS without paying a third-party certificate authority in local testing, create a local certificate pair:
 
@@ -129,8 +131,11 @@ To secure your Ingress with HTTPS without paying a third-party certificate autho
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -keyout tls.key \
   -out tls.crt \
-  -subj "/CN=campus.local/O=CampusDevOps"
+  -subj "/CN=campus.local/O=CampusDevOps" \
+  -addext "subjectAltName=DNS:campus.local,DNS:portal.campus.local,DNS:api.campus.local"
 ```
+
+> The `-addext "subjectAltName=..."` flag is mandatory. The NGINX Ingress Controller validates certificates with Go's `x509` library, which **ignores the Common Name** and only accepts Subject Alternative Names. A certificate with only a CN is rejected with `x509: certificate is not valid for any names`, and the controller silently serves its own fake certificate instead. You can confirm the SANs with `openssl x509 -in tls.crt -noout -text | grep -A1 'Subject Alternative Name'`.
 
 ### Step 2: Create a Kubernetes TLS Secret
 Store the public certificate and private key inside Kubernetes as a `kubernetes.io/tls` Secret:
@@ -177,6 +182,7 @@ Map the local domain in `/etc/hosts` or use `curl --resolve`:
 
 ```bash
 INGRESS_IP=$(kubectl get ingress campus-ingress-tls -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo "INGRESS_IP=$INGRESS_IP"     # must print 192.168.49.2, never an empty line
 
 # Test Host 1: Portal with HTTPS (-k ignores self-signed certificate warning)
 curl -k --resolve portal.campus.local:443:$INGRESS_IP https://portal.campus.local/
@@ -184,6 +190,8 @@ curl -k --resolve portal.campus.local:443:$INGRESS_IP https://portal.campus.loca
 # Test Host 2: API with HTTPS
 curl -k --resolve api.campus.local:443:$INGRESS_IP https://api.campus.local/api/health
 ```
+
+> The Ingress `ADDRESS` is written by the controller a few seconds after `kubectl apply`. If `INGRESS_IP` comes out empty, the `--resolve` flag receives a malformed entry and curl fails with `curl: (49) Could not parse CURLOPT_RESOLVE entry`. Wait for `kubectl get ingress campus-ingress-tls` to show an address, then re-run the assignment.
 
 ### Cleanup
 ```bash
