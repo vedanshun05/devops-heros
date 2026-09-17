@@ -1,12 +1,19 @@
 apiVersion: v1
+data:
+  DEFAULT_CURRENCY: INR
+  ENVIRONMENT: production
+  LOG_LEVEL: INFO
+  MAX_BOOKING_DAYS: "30"
+  PORT: "5000"
 kind: ConfigMap
 metadata:
-  name: yatri-app-config
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"DEFAULT_CURRENCY":"INR","ENVIRONMENT":"production","LOG_LEVEL":"INFO","MAX_BOOKING_DAYS":"30","PORT":"5000"},"kind":"ConfigMap","metadata":{"annotations":{},"labels":{"app":"yatri-backend"},"name":"yatri-app-config","namespace":"default"}}
+  creationTimestamp: "2026-09-17T07:36:22Z"
   labels:
     app: yatri-backend
-data:
-  ENVIRONMENT: "production"
-  LOG_LEVEL: "INFO"
-  PORT: "5000"
-  DEFAULT_CURRENCY: "INR"
-  MAX_BOOKING_DAYS: "30"
+  name: yatri-app-config
+  namespace: default
+  resourceVersion: "61385"
+  uid: 0d437407-04b1-4674-ab7c-5c42b583d524
