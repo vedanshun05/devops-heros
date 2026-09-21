@@ -40,3 +40,13 @@
 ![09-1](./Outputs/09/09-1.png)
 ![09-2](./Outputs/09/09-2.png)
 ![09-2](./Outputs/09/09-3.png)
+
+# mini-project
+
+![01](./Outputs/mini-project/01.png)
+![02](./Outputs/mini-project/02.png)
+![03](./Outputs/mini-project/03.png)
+![04](./Outputs/mini-project/04.png)
+![05](./Outputs/mini-project/05.png)
+![06](./Outputs/mini-project/06.png)
+![07](./Outputs/mini-project/07.png)
