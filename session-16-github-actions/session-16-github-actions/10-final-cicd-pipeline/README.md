@@ -1,212 +1,64 @@
-# 10 - Final CI/CD Pipeline
+# Session 16: CI/CD Demo
 
-## 1. Architecture
+This project is a Python calculator with five existing unit tests. The build
+script copies the application into `build/`. The Dockerfile packages it as a
+container that prints the result of adding 10 and 5.
 
-```mermaid
-flowchart TD
-    A[Developer] -->|git push| B[GitHub Repository]
-    B --> C[GitHub Actions]
-    C --> D[TEST]
-    C --> E[SECURITY]
-    D --> F[BUILD]
-    F --> G[ARTIFACT]
-```
+## CI vs CD
 
----
+**Continuous Integration (CI)** checks a code change by testing and building it.
+**Continuous Delivery** keeps a tested build ready for release. **Continuous
+Deployment** automatically releases it to a running environment. Here the CD
+job automatically runs the built container as a Kubernetes Job.
 
-## 2. Jobs
-The workflow contains three jobs:
-1. `test`
-2. `build`
-3. `security-check`
+## GitHub Actions terms
 
----
+| Term | Meaning in this project |
+| --- | --- |
+| Pipeline | The complete sequence from a code push to deployment. |
+| GitHub Actions | GitHub's service for running this sequence. |
+| Workflow | The YAML file describing triggers, jobs and steps. |
+| Job | A group of steps on one runner; this workflow has `ci` and `cd`. |
+| Step | One operation, such as running tests or uploading an artifact. |
+| Runner | The machine executing a job; here GitHub provides `ubuntu-latest`. |
+| Secret | A protected value; `DEMO_SECRET` demonstrates access without printing it. |
+| Artifact | A file saved by a workflow and available to download or another job. |
+| Build | Produce the application files and Docker image. |
+| Test | Check the calculator's behaviour using the existing pytest tests. |
 
-## 3. Test Job
-The test job:
-**Checkout** → **Setup Python** → **Install dependencies** → **Run pytest**
+## Actual workflow
 
----
-
-## 4. Build Job
-The build job runs **only** after tests pass.
-```yaml
-needs: test
-```
-
-**Flow:**
-Test → PASS → Build → Artifact
-
-**If tests fail:**
-Test → FAIL → Build does not run
-
----
-
-## 5. Security Check
-The security job checks for common sensitive files:
-* `.env`
-* `*.pem`
-* `*.key`
-
-*(This is only a basic classroom demonstration. It is not a complete security scanner.)*
-
----
-
-## 6. Runner
-All jobs use:
-```yaml
-runs-on: ubuntu-latest
-```
-GitHub provides the runner environment.
-
----
-
-## 7. Artifact
-The build generates:
-```text
-build/
-├── calculator.py
-└── build-info.txt
-```
-The workflow uploads it as:
-`calculator-build`
-
----
-
-## 8. Run Locally
-
-**Install dependencies:**
-```bash
-python3 -m pip install -r requirements.txt
-```
-
-**Run application:**
-```bash
-python3 app/calculator.py
-```
-
-**Run tests:**
-```bash
-pytest -v
-```
-
-**Build:**
-```bash
-chmod +x build.sh
-./build.sh
-```
-
----
-
-## 9. Git Commands
-```bash
-git init
-git add .
-git commit -m "Add final CI/CD pipeline"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/session16-cicd-github-actions.git
-git push -u origin main
-```
-
----
-
-## 10. Expected Pipeline
-GitHub Actions should show:
+The active file is [session16-ci-cd.yml](../../../.github/workflows/session16-ci-cd.yml)
+at the repository root. A push to `session16-github-actions` triggers it.
 
 ```text
-Final CI Pipeline
-│
-├── ✓ Test Application
-│
-├── ✓ Security Check
-│
-└── ✓ Build Application
-      │
-      └── ✓ Upload build artifact
+Push -> CI: secret check -> tests -> build -> Docker image -> artifacts
+                                                     |
+                       CD: download image -> Kind -> Kubernetes Job -> logs
 ```
 
----
+CI saves `calculator-build` and `calculator-image`. The latter contains the
+built image as a compressed archive. CD downloads this exact image and loads
+it into a temporary Kind Kubernetes cluster. `needs: ci` means CD runs only
+when CI succeeds.
 
-## 11. Failure Scenario
-Break the application intentionally:
-```python
-def add(a, b):
-    return a + b + 1
-```
+A Kubernetes Job is suitable because this calculator runs once and exits.
+The expected Job log is `Deployed calculator: 10 + 5 = 15`. The runner and its
+cluster are temporary; this demonstration does not create a persistent server.
 
-Run:
-```bash
-pytest
-```
-The test fails. Push the change.
+## Project files
 
-**Expected:**
-```text
-✗ Test Application
-```
+| File | Purpose |
+| --- | --- |
+| `app/calculator.py` | Calculator source code. |
+| `tests/` | Existing unit tests. |
+| `requirements.txt` | Test dependencies. |
+| `build.sh` | Prepare build files. |
+| `Dockerfile` | Package the calculator. |
+| Repository-root `.github/workflows/session16-ci-cd.yml` | CI and CD jobs. |
 
-Because `build` `needs: test`, the build does not proceed.
+## Execution evidence
 
----
-
-## 12. Fix
-Restore:
-```python
-def add(a, b):
-    return a + b
-```
-
-Commit:
-```bash
-git add .
-git commit -m "Fix application"
-git push
-```
-
-**Expected:**
-```text
-✓ Test Application
-✓ Security Check
-✓ Build Application
-✓ Upload build artifact
-```
-
----
-
-## 13. Complete Concept Map
-
-```text
-CI/CD
-│
-├── CI
-│   ├── Build
-│   └── Test
-│
-├── CD
-│   └── Deliver / Deploy
-│
-└── GitHub Actions
-    │
-    ├── Workflow
-    │
-    ├── Jobs
-    │   ├── Test
-    │   ├── Security
-    │   └── Build
-    │
-    ├── Steps
-    │
-    ├── Runner
-    │
-    ├── Secrets
-    │
-    └── Artifacts
-```
-
----
-
-### 💡 Final Takeaway
-
-> **git push** → **GitHub Actions** → **Test** → **Security Check** → **Build** → **Artifact** → **Ready for CD / Deployment**
-
-The next step after this session is to connect the pipeline to a deployment target such as Docker, Kubernetes, AWS, or Azure.
+The implementation is prepared. Successful execution still needs to be verified.
+After running it, add the real Actions run URL and screenshots of passing tests,
+artifacts, the green CI/CD summary, and the completed Kubernetes Job.
