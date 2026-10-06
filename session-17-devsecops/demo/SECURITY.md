@@ -1,21 +1,31 @@
-# Security Policy
+# Security Checks
 
-## Supported Versions
+The active configuration is the repository-root
+`.github/workflows/session17-devsecops.yml`.
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+| Check | Configuration | When it blocks the pipeline |
+| --- | --- | --- |
+| SAST | Bandit scans `app/`. | Medium/high severity findings at medium/high confidence. |
+| SCA | pip-audit checks `requirements.txt`. | A known dependency vulnerability is reported. |
+| Secret scan | Trivy filesystem scan of the demo directory. | A secret finding is reported. |
+| Image scan | Trivy scans the built image. | A HIGH or CRITICAL vulnerability is reported. |
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+Scanner failures return a nonzero exit code. Jobs depend on the preceding job,
+so a failed check stops image publication and deployment.
 
-## Reporting a Vulnerability
+## Source-code setting
 
-Use this section to tell people how to report a vulnerability.
+Flask debug mode is disabled. Bandit's B104 rule flags binding to `0.0.0.0`.
+That bind is intentional inside the container: traffic from a Kubernetes Service
+must reach the process. A `nosec B104` annotation applies only to that line.
+It does not suppress other findings.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+## Credentials
+
+GitHub supplies `GITHUB_TOKEN` at runtime. It has package-write permission only
+in the image-publishing job and package-read permission in the deployment job.
+The Kubernetes pull Secret is created on the temporary runner cluster.
+Credentials are not written into source files or manifests.
+
+When a gate fails, examine the finding, fix the affected code or dependency,
+and rerun the check. Successful security output still needs to be captured.
