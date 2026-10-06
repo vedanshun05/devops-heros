@@ -78,18 +78,15 @@ kubectl --context kind-session20 get deployment session20-gitops-app -n session2
 
 All 25 screenshots are below. New command-output images have matching `.txt` transcripts.
 
-<details>
-<summary>Prometheus</summary>
+### Prometheus
 
 ### Setup and queries
 
 ![Prometheus startup](Outputs/Prometheus/1.png)
 ![Prometheus queries](Outputs/Prometheus/2.png)
 
-</details>
 
-<details>
-<summary>Grafana</summary>
+### Grafana
 
 ### Setup and visualizations
 
@@ -100,10 +97,8 @@ These original panels show the Prometheus `up` metric.
 ![Time-series panel](Outputs/Grafana/3.png)
 ![Gauge, stat, and bar panels](Outputs/Grafana/visualization.png)
 
-</details>
 
-<details>
-<summary>Monitoring: CPU, memory, health, and alerts</summary>
+### Monitoring: CPU, memory, health, and alerts
 
 ### Host measurements and healthy targets
 
@@ -116,17 +111,13 @@ These original panels show the Prometheus `up` metric.
 ![Prometheus firing alert](Outputs/Monitoring/04-alerts-page.png)
 ![Application restored and alert cleared](Outputs/Monitoring/05-alert-resolved.png)
 
-</details>
 
-<details>
-<summary>Kubernetes logs and application health</summary>
+### Kubernetes logs and application health
 
 ![HTTP response, request logs, pods, and events](Outputs/Observability/01-kubernetes-logs-health.png)
 
-</details>
 
-<details>
-<summary>Argo CD: setup and GitOps demo</summary>
+### Argo CD: setup and GitOps demo
 
 ### Initial setup
 
@@ -149,7 +140,6 @@ Earlier practice outputs; the old URL and namespace were corrected later. Passwo
 ![Final five replicas, Synced and Healthy](Outputs/ArgoCD/10-final-restored.png)
 ![Application web page](Outputs/ArgoCD/11-nginx-web.png)
 
-</details>
 
 ## Completion
 
