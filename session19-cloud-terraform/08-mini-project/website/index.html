@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Session 19 Mini Project</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 64px auto; padding: 0 24px; line-height: 1.6; color: #183248; background: #f6f8fa; }
+    main { background: white; padding: 32px; border-radius: 12px; border: 1px solid #dce4eb; }
+    h1 { line-height: 1.2; }
+    code { background: #edf2f6; padding: 2px 6px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Session 19 Mini Project</h1>
+    <p>The Terraform cloud infrastructure is working.</p>
+    <p>This page was uploaded to a private S3 bucket by Terraform. The EC2 instance downloaded it using an IAM role and serves it through Nginx.</p>
+    <ul>
+      <li>VPC and subnet provide the network.</li>
+      <li>The Internet Gateway and route table provide internet access.</li>
+      <li>The Security Group allows HTTP traffic on port 80.</li>
+      <li>EC2 runs the web server.</li>
+      <li>S3 stores <code>index.html</code>.</li>
+    </ul>
+  </main>
+</body>
+</html>

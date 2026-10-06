@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Changing the page changes this hash and recreates the lab web instance.
+# Page hash: ${page_hash}
+echo "[INFO] Installing Nginx"
+dnf install -y nginx
+
+# IAM changes can take time to reach every AWS service. Retry the download.
+echo "[INFO] Downloading the page from private S3 using the instance role"
+downloaded=false
+for attempt in {1..30}; do
+  if aws s3 cp "s3://${bucket_name}/${object_key}" \
+    /usr/share/nginx/html/index.html --region "${aws_region}"; then
+    downloaded=true
+    break
+  fi
+  echo "[INFO] Waiting for S3 access (attempt $attempt/30)"
+  sleep 5
+done
+
+if [ "$downloaded" != true ]; then
+  echo "[ERROR] Could not download the page from S3"
+  exit 1
+fi
+
+chmod 644 /usr/share/nginx/html/index.html
+systemctl enable --now nginx
+echo "[INFO] Session 19 mini-project web server is ready"

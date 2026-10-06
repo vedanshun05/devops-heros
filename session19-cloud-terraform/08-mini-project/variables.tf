@@ -3,3 +3,9 @@ variable "aws_region" {
   type        = string
   default     = "ap-south-1"
 }
+
+variable "instance_type" {
+  description = "Small x86_64 EC2 instance for the web-server lab."
+  type        = string
+  default     = "t3.micro"
+}
