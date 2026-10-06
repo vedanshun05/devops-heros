@@ -50,3 +50,10 @@
 ![05](./Outputs/mini-project/05.png)
 ![06](./Outputs/mini-project/06.png)
 ![07](./Outputs/mini-project/07.png)
+
+# Explain and Top
+
+![1](./Outputs/1.png)
+![2](./Outputs/2.png)
+![3](./Outputs/3.png)
+![4](./Outputs/4.png)
