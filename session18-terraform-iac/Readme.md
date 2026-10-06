@@ -1,3 +1,13 @@
+# Task 2: AWS Services Research
+
+| Topic | Research notes |
+| :-- | :-- |
+| IAM — Governance | [IAM README](./aws-services/01-iam/README.md) |
+| EC2 — Compute | [EC2 README](./aws-services/02-ec2/README.md) |
+| S3 — Storage | [S3 README](./aws-services/03-s3/README.md) |
+| VPC — Networking | [VPC README](./aws-services/04-vpc/README.md) |
+| DynamoDB and RDS — Databases | [Database README](./aws-services/05-dynamodb-rds/README.md) |
+
 # Install terraform
 
 ```
@@ -28,4 +38,3 @@ https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 ![demo-6](./Outputs/demo-6.png)
 ![demo-7](./Outputs/demo-7.png)
 ![demo-8](./Outputs/demo-8.png)
-
