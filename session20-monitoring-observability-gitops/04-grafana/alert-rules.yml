@@ -1,0 +1,26 @@
+# Short duration for a local failure drill, not a production paging policy.
+groups:
+  - name: session20-monitoring
+    rules:
+      - alert: DemoApplicationUnavailable
+        expr: probe_success{job="application-health"} == 0
+        for: 10s
+        labels:
+          severity: warning
+        annotations:
+          summary: "The Nginx demo is not responding successfully"
+          description: "HTTP probing of {{ $labels.instance }} failed for 10 seconds."
+      - alert: HostCPUHigh
+        expr: 100 * (1 - avg(rate(node_cpu_seconds_total{job="node",mode="idle"}[1m]))) > 80
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Host CPU usage is above 80%"
+      - alert: HostMemoryHigh
+        expr: 100 * (1 - node_memory_MemAvailable_bytes{job="node"} / node_memory_MemTotal_bytes{job="node"}) > 85
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Host memory usage is above 85%"

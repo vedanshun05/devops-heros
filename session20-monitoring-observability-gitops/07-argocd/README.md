@@ -127,6 +127,13 @@ Login with:
 
 ## Step 4 — Register Your App with Argo CD (One-time Step)
 
+Use your own repository URL in `app/argocd-application.yaml`, then apply the
+updated file. Editing a local file alone does not update the cluster. This lab
+sets `source.directory.exclude: argocd-application.yaml` so Argo CD deploys the
+Deployment and Service without syncing its own bootstrap configuration. If that
+file is included in the Git source path, an old URL committed there can overwrite
+your live Application during sync.
+
 This is the **single manual step** you do once. It tells Argo CD:
 *"Watch the `app/` folder in this GitHub repo and deploy whatever is there into the `session20` namespace."*
 

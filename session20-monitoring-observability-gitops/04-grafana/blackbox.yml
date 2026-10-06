@@ -1,0 +1,7 @@
+# A successful HTTP response (2xx) means the sample application is reachable.
+modules:
+  http_2xx:
+    prober: http
+    timeout: 3s
+    http:
+      preferred_ip_protocol: ip4

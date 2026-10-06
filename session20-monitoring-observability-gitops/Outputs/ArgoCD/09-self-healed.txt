@@ -1,0 +1,22 @@
+GitOps self-healing: Argo CD restored three replicas without a Git change
+Captured: 2026-10-06T11:40:52+00:00
+
+$ git -C session20-monitoring-observability-gitops/gitops-demo log -1 --oneline
+e89ebbb Session20 demonstrate GitOps scale to 3 replicas
+
+$ kubectl get deployment,pods -n session20
+NAME                                   READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/session20-gitops-app   3/3     3            3           22m
+
+NAME                                        READY   STATUS    RESTARTS   AGE
+pod/session20-gitops-app-679fcbbd85-d9qzd   1/1     Running   0          22m
+pod/session20-gitops-app-679fcbbd85-hmfkv   1/1     Running   0          42s
+pod/session20-gitops-app-679fcbbd85-hppnc   1/1     Running   0          42s
+
+$ kubectl get application session20-app -n argocd
+NAME            SYNC STATUS   HEALTH STATUS
+session20-app   Synced        Healthy
+
+$ kubectl get application session20-app -n argocd -o jsonpath="Git revision: {.status.sync.revision}{\"\\n\"}"
+Git revision: e89ebbb1a6fe759ce8a0896d7ac91da623639aa1
+

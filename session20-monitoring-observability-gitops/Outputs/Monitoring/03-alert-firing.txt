@@ -1,0 +1,38 @@
+Alert drill: Nginx stopped, HTTP probe fails, alert fires
+Captured: 2026-10-06T11:40:01+00:00
+
+$ docker ps -a --filter name=session20-monitoring-app --format "{{.Names}} {{.Status}}"
+session20-monitoring-app Exited (0) 54 seconds ago
+
+$ python3 /tmp/session20-evidence/query.py 'probe_success{job="application-health"}' 'up{job="application-health"}' 'ALERTS{alertname="DemoApplicationUnavailable",alertstate="firing"}'
+PromQL: probe_success{job="application-health"}
+  labels: {"__name__": "probe_success", "instance": "http://demo-app:80/", "job": "application-health"} value: 0
+PromQL: up{job="application-health"}
+  labels: {"__name__": "up", "instance": "http://demo-app:80/", "job": "application-health"} value: 1
+PromQL: ALERTS{alertname="DemoApplicationUnavailable",alertstate="firing"}
+  labels: {"__name__": "ALERTS", "alertname": "DemoApplicationUnavailable", "alertstate": "firing", "instance": "http://demo-app:80/", "job": "application-health", "severity": "warning"} value: 1
+
+$ curl -fsS http://localhost:9090/api/v1/alerts | python3 -m json.tool
+{
+    "status": "success",
+    "data": {
+        "alerts": [
+            {
+                "labels": {
+                    "alertname": "DemoApplicationUnavailable",
+                    "instance": "http://demo-app:80/",
+                    "job": "application-health",
+                    "severity": "warning"
+                },
+                "annotations": {
+                    "description": "HTTP probing of http://demo-app:80/ failed for 10 seconds.",
+                    "summary": "The Nginx demo is not responding successfully"
+                },
+                "state": "firing",
+                "activeAt": "2026-10-06T11:39:11.916397886Z",
+                "value": "0e+00"
+            }
+        ]
+    }
+}
+

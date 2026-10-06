@@ -8,9 +8,12 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/Nency-Ravaliya/gitops-demo.git
+    repoURL: https://github.com/vedanshun05/gitops-demo.git
     targetRevision: main
     path: app
+    directory:
+      # Bootstrap configuration is applied manually, not synced as an app resource.
+      exclude: argocd-application.yaml
 
   destination:
     server: https://kubernetes.default.svc

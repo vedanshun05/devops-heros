@@ -1,0 +1,24 @@
+GitOps: Git commit reconciled to three replicas
+Captured: 2026-10-06T11:39:32+00:00
+
+$ git -C session20-monitoring-observability-gitops/gitops-demo show --stat --oneline HEAD
+e89ebbb Session20 demonstrate GitOps scale to 3 replicas
+ app/argocd-application.yaml | 2 ++
+ app/deployment.yaml         | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+$ kubectl get application session20-app -n argocd -o jsonpath="{.spec.source.repoURL}{\"\\n\"}{.status.sync.revision}{\"\\n\"}{.status.sync.status}{\"\\n\"}{.status.health.status}{\"\\n\"}"
+https://github.com/vedanshun05/gitops-demo.git
+e89ebbb1a6fe759ce8a0896d7ac91da623639aa1
+Synced
+Healthy
+
+$ kubectl get deployment,pods -n session20
+NAME                                   READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/session20-gitops-app   3/3     3            3           21m
+
+NAME                                        READY   STATUS    RESTARTS   AGE
+pod/session20-gitops-app-679fcbbd85-d9qzd   1/1     Running   0          21m
+pod/session20-gitops-app-679fcbbd85-xvss6   1/1     Running   0          6m55s
+pod/session20-gitops-app-679fcbbd85-z78bf   1/1     Running   0          21m
+

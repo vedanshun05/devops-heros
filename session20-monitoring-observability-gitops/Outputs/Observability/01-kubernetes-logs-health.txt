@@ -1,0 +1,43 @@
+Kubernetes observability: HTTP response, request logs, pods, and events
+Captured: 2026-10-06T11:40:57+00:00
+
+$ curl -sSI http://localhost:8082/
+HTTP/1.1 200 OK
+Server: nginx/1.27.5
+Date: Tue, 06 Oct 2026 11:40:57 GMT
+Content-Type: text/html
+Content-Length: 615
+Last-Modified: Wed, 16 Apr 2025 12:55:34 GMT
+Connection: keep-alive
+ETag: "67ffa8c6-267"
+Accept-Ranges: bytes
+
+$ kubectl logs -n session20 -l app=session20-gitops-app --all-containers=true --tail=4 --prefix=true
+[pod/session20-gitops-app-679fcbbd85-hmfkv/app] 2026/10/06 11:40:11 [notice] 1#1: start worker process 49
+[pod/session20-gitops-app-679fcbbd85-hmfkv/app] 2026/10/06 11:40:11 [notice] 1#1: start worker process 50
+[pod/session20-gitops-app-679fcbbd85-hmfkv/app] 2026/10/06 11:40:11 [notice] 1#1: start worker process 51
+[pod/session20-gitops-app-679fcbbd85-hmfkv/app] 2026/10/06 11:40:11 [notice] 1#1: start worker process 52
+[pod/session20-gitops-app-679fcbbd85-hppnc/app] 2026/10/06 11:40:11 [notice] 1#1: start worker process 49
+[pod/session20-gitops-app-679fcbbd85-hppnc/app] 2026/10/06 11:40:11 [notice] 1#1: start worker process 50
+[pod/session20-gitops-app-679fcbbd85-hppnc/app] 2026/10/06 11:40:11 [notice] 1#1: start worker process 51
+[pod/session20-gitops-app-679fcbbd85-hppnc/app] 2026/10/06 11:40:11 [notice] 1#1: start worker process 52
+[pod/session20-gitops-app-679fcbbd85-d9qzd/app] 2026/10/06 11:18:50 [notice] 1#1: start worker process 51
+[pod/session20-gitops-app-679fcbbd85-d9qzd/app] 2026/10/06 11:18:50 [notice] 1#1: start worker process 52
+[pod/session20-gitops-app-679fcbbd85-d9qzd/app] 127.0.0.1 - - [06/Oct/2026:11:40:57 +0000] "GET / HTTP/1.1" 200 615 "-" "curl/8.22.0" "-"
+[pod/session20-gitops-app-679fcbbd85-d9qzd/app] 127.0.0.1 - - [06/Oct/2026:11:40:57 +0000] "HEAD / HTTP/1.1" 200 0 "-" "curl/8.22.0" "-"
+
+$ kubectl get pods -n session20
+NAME                                    READY   STATUS    RESTARTS   AGE
+session20-gitops-app-679fcbbd85-d9qzd   1/1     Running   0          22m
+session20-gitops-app-679fcbbd85-hmfkv   1/1     Running   0          47s
+session20-gitops-app-679fcbbd85-hppnc   1/1     Running   0          47s
+
+$ kubectl get events -n session20 --sort-by=.lastTimestamp | tail -n 7
+47s         Normal   Scheduled           pod/session20-gitops-app-679fcbbd85-hmfkv    Successfully assigned session20/session20-gitops-app-679fcbbd85-hmfkv to session20-control-plane
+47s         Normal   ScalingReplicaSet   deployment/session20-gitops-app              Scaled up replica set session20-gitops-app-679fcbbd85 from 1 to 3
+46s         Normal   Started             pod/session20-gitops-app-679fcbbd85-hmfkv    Container started
+46s         Normal   Pulled              pod/session20-gitops-app-679fcbbd85-hppnc    Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+46s         Normal   Created             pod/session20-gitops-app-679fcbbd85-hmfkv    Container created
+46s         Normal   Created             pod/session20-gitops-app-679fcbbd85-hppnc    Container created
+46s         Normal   Started             pod/session20-gitops-app-679fcbbd85-hppnc    Container started
+

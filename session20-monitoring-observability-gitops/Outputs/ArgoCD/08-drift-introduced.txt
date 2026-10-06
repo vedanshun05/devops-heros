@@ -1,0 +1,23 @@
+GitOps self-healing: introduce manual drift (Git still says three)
+Captured: 2026-10-06T11:40:09+00:00
+
+$ kubectl scale deployment session20-gitops-app -n session20 --replicas=1
+deployment.apps/session20-gitops-app scaled
+
+$ kubectl get deployment session20-gitops-app -n session20 -o jsonpath="Desired replicas now: {.spec.replicas}{\"\\n\"}"
+Desired replicas now: 1
+
+$ git -C session20-monitoring-observability-gitops/gitops-demo show HEAD:app/deployment.yaml | head -n 12
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: session20-gitops-app
+  labels:
+    app: session20-gitops-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: session20-gitops-app
+  template:
+

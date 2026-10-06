@@ -1,0 +1,28 @@
+Alert drill recovery: HTTP healthy and no active demo alert
+Captured: 2026-10-06T11:41:56+00:00
+
+$ curl -sSI http://localhost:8081/
+HTTP/1.1 200 OK
+Server: nginx/1.27.5
+Date: Tue, 06 Oct 2026 11:41:56 GMT
+Content-Type: text/html
+Content-Length: 615
+Last-Modified: Wed, 16 Apr 2025 12:55:34 GMT
+Connection: keep-alive
+ETag: "67ffa8c6-267"
+Accept-Ranges: bytes
+
+$ python3 /tmp/session20-evidence/query.py 'probe_success{job="application-health"}' 'ALERTS{alertname="DemoApplicationUnavailable"}'
+PromQL: probe_success{job="application-health"}
+  labels: {"__name__": "probe_success", "instance": "http://demo-app:80/", "job": "application-health"} value: 1
+PromQL: ALERTS{alertname="DemoApplicationUnavailable"}
+  No matching series.
+
+$ curl -fsS http://localhost:9090/api/v1/alerts | python3 -m json.tool
+{
+    "status": "success",
+    "data": {
+        "alerts": []
+    }
+}
+

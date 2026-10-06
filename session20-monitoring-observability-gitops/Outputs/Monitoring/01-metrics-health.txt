@@ -1,0 +1,34 @@
+Monitoring: real Linux host metrics and HTTP application health
+Captured: 2026-10-06T11:38:47+00:00
+
+$ python3 /tmp/session20-evidence/query.py '100 * (1 - avg(rate(node_cpu_seconds_total{job="node",mode="idle"}[1m])))' '100 * (1 - node_memory_MemAvailable_bytes{job="node"} / node_memory_MemTotal_bytes{job="node"})' 'probe_success{job="application-health"}' 'probe_http_status_code{job="application-health"}'
+PromQL: 100 * (1 - avg(rate(node_cpu_seconds_total{job="node",mode="idle"}[1m])))
+  labels: {} value: 10.296590909090153
+PromQL: 100 * (1 - node_memory_MemAvailable_bytes{job="node"} / node_memory_MemTotal_bytes{job="node"})
+  labels: {"instance": "node-exporter:9100", "job": "node"} value: 75.98662253794326
+PromQL: probe_success{job="application-health"}
+  labels: {"__name__": "probe_success", "instance": "http://demo-app:80/", "job": "application-health"} value: 1
+PromQL: probe_http_status_code{job="application-health"}
+  labels: {"__name__": "probe_http_status_code", "instance": "http://demo-app:80/", "job": "application-health"} value: 200
+
+$ curl -sSI http://localhost:8081/
+HTTP/1.1 200 OK
+Server: nginx/1.27.5
+Date: Tue, 06 Oct 2026 11:38:47 GMT
+Content-Type: text/html
+Content-Length: 615
+Last-Modified: Wed, 16 Apr 2025 12:55:34 GMT
+Connection: keep-alive
+ETag: "67ffa8c6-267"
+Accept-Ranges: bytes
+
+$ docker logs --tail 8 session20-monitoring-app
+172.19.0.5 - - [06/Oct/2026:11:38:24 +0000] "GET / HTTP/1.1" 200 615 "-" "Blackbox-Exporter/0.28.0" "-"
+172.19.0.5 - - [06/Oct/2026:11:38:29 +0000] "GET / HTTP/1.1" 200 615 "-" "Blackbox-Exporter/0.28.0" "-"
+172.19.0.5 - - [06/Oct/2026:11:38:34 +0000] "GET / HTTP/1.1" 200 615 "-" "Blackbox-Exporter/0.28.0" "-"
+172.19.0.5 - - [06/Oct/2026:11:38:39 +0000] "GET / HTTP/1.1" 200 615 "-" "Blackbox-Exporter/0.28.0" "-"
+172.19.0.1 - - [06/Oct/2026:11:38:39 +0000] "HEAD / HTTP/1.1" 200 0 "-" "curl/8.22.0" "-"
+172.19.0.1 - - [06/Oct/2026:11:38:39 +0000] "\x16\x03\x01\x06" 400 157 "-" "-" "-"
+172.19.0.5 - - [06/Oct/2026:11:38:44 +0000] "GET / HTTP/1.1" 200 615 "-" "Blackbox-Exporter/0.28.0" "-"
+172.19.0.1 - - [06/Oct/2026:11:38:47 +0000] "HEAD / HTTP/1.1" 200 0 "-" "curl/8.22.0" "-"
+

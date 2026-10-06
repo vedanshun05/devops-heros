@@ -6,6 +6,7 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alert-rules.yml:/etc/prometheus/alert-rules.yml:ro
 
   grafana:
     image: grafana/grafana:12.1.1
@@ -14,3 +15,40 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./dashboards:/etc/grafana/dashboards:ro
+
+  # Read host kernel counters for CPU and memory, without privileged mode.
+  node-exporter:
+    image: prom/node-exporter:v1.10.2
+    container_name: session20-node-exporter
+    command:
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+      - --collector.disable-defaults
+      - --collector.cpu
+      - --collector.meminfo
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+
+  # Probe the demo app over HTTP; exporter health and app health are different.
+  blackbox:
+    image: prom/blackbox-exporter:v0.28.0
+    container_name: session20-blackbox
+    volumes:
+      - ./blackbox.yml:/etc/blackbox_exporter/config.yml:ro
+
+  demo-app:
+    image: nginx:1.27-alpine
+    container_name: session20-monitoring-app
+    ports:
+      - "127.0.0.1:8081:80"
+
+volumes:
+  grafana-data:
+    name: session20-grafana-data
+    external: true

@@ -1,0 +1,24 @@
+GitOps final state: original five replicas restored through Git
+Captured: 2026-10-06T11:44:46+00:00
+
+$ git -C session20-monitoring-observability-gitops/gitops-demo log -2 --oneline
+b6d47f0 Session20 restore 5 replicas after GitOps demo
+e89ebbb Session20 demonstrate GitOps scale to 3 replicas
+
+$ kubectl get application session20-app -n argocd -o jsonpath="Repository: {.spec.source.repoURL}{\"\\n\"}Git revision: {.status.sync.revision}{\"\\n\"}Sync: {.status.sync.status}{\"\\n\"}Health: {.status.health.status}{\"\\n\"}"
+Repository: https://github.com/vedanshun05/gitops-demo.git
+Git revision: b6d47f0cc5069ea724a33e68a0c71f58606da364
+Sync: Synced
+Health: Healthy
+
+$ kubectl get deployment,pods -n session20
+NAME                                   READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/session20-gitops-app   5/5     5            5           26m
+
+NAME                                        READY   STATUS    RESTARTS   AGE
+pod/session20-gitops-app-679fcbbd85-2w9ct   1/1     Running   0          2m58s
+pod/session20-gitops-app-679fcbbd85-d9qzd   1/1     Running   0          26m
+pod/session20-gitops-app-679fcbbd85-hmfkv   1/1     Running   0          4m36s
+pod/session20-gitops-app-679fcbbd85-hppnc   1/1     Running   0          4m36s
+pod/session20-gitops-app-679fcbbd85-x5rcd   1/1     Running   0          2m58s
+

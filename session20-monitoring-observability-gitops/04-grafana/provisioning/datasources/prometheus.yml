@@ -1,0 +1,14 @@
+# Keep the default data source on the Docker service address, not localhost.
+apiVersion: 1
+
+datasources:
+  - name: prometheus
+    uid: ag0egn9ro2yo0f
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: false
+    jsonData:
+      httpMethod: POST
+      timeInterval: 5s
