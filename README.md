@@ -7,3 +7,8 @@
 - Section A: https://forms.gle/ydjAJcwxjpjBXgxB8
 - Section B: https://forms.gle/pAuXQaokwVzhRzit6                      
 
+
+## Remaining homework
+
+- [Commands and screenshot checkpoints](./homework-guides/README.md)
+- [Written homework published on the session branches](./homework-guides/WRITTEN-HOMEWORK.md)
