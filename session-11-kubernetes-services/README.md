@@ -22,3 +22,7 @@
 # 05-headless
 
 ![05-1](./Outputs/05/05-1.png)
+
+# Task 2: Kubernetes Object Comparison
+
+[Deployment, ReplicaSet, DaemonSet, StatefulSet and Service comparisons](./object-comparisons/README.md)
