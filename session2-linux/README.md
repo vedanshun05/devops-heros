@@ -36,7 +36,7 @@ on this Arch machine, the manual guide uses `useradd`.
 # Task 4: Linux Command Cheat Sheet
 
 These notes explain the commands used in the remaining practice exercise.
-Their real execution screenshots still need to be added.
+Executed on 9 October 2026; the actual terminal screenshots are below.
 
 | Command | Purpose |
 | --- | --- |
@@ -59,3 +59,21 @@ Their real execution screenshots still need to be added.
 | `journalctl -u <service>` | Read journal logs for one systemd service. |
 | `id <user>` | Show a user's ID and group membership. |
 | `getent passwd <user>` | Look up the user's account entry. |
+
+## Executed test-user exercise
+
+The host is Arch/Omarchy, so I used a disposable `ubuntu:24.04` container for the Ubuntu-specific `adduser` exercise. The minimal Ubuntu image needed the `adduser` package first. `adduser --disabled-password --gecos "DevOps test user" devopslab` created the account, home directory, Bash shell and group membership. `id`, `getent passwd`, `ls -ld /home/devopslab` and `su` verified them. The container was run with `--rm`, so its test account and files were removed when it exited.
+
+![Ubuntu adduser and account verification](Outputs/linux-adduser.png)
+
+## Executed cheat-sheet practice
+
+The screenshot shows file creation, copying, renaming, permissions, text search, filesystem space and processes. `chmod 640` produced `-rw-r-----`; `grep -n` found the text on line 1. Practice files were kept in a disposable directory.
+
+![Executed Linux commands](Outputs/linux-cheatsheet.png)
+
+## Service-specific journal logs
+
+`journalctl -u docker --no-pager -n 8` showed Docker startup and container events. `-u` filters one service, `-n` limits the number of entries, `-f` follows new entries, and `--since "1 hour ago"` restricts the time range.
+
+![Actual Docker service journal](Outputs/linux-docker-logs.png)
