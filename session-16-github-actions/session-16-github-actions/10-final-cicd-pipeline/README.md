@@ -59,6 +59,4 @@ cluster are temporary; this demonstration does not create a persistent server.
 
 ## Execution evidence
 
-The implementation is prepared. Successful execution still needs to be verified.
-After running it, add the real Actions run URL and screenshots of passing tests,
-artifacts, the green CI/CD summary, and the completed Kubernetes Job.
+The [actual run passed CI and CD](https://github.com/vedanshun05/devops-heros/actions/runs/37599499801/attempts/2). See the [submitted session README](../README.md) for the real passing-test, artifact and Kubernetes Job screenshots.
