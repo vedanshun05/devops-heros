@@ -11,6 +11,8 @@ spec:
     path: session21-python/helm/taskboard
     helm:
       releaseName: taskboard
+      parameters:
+        - {name: monitoring.serviceMonitor.enabled, value: "true"}
       valueFiles: [values.yaml, ../../gitops/values.yaml]
   destination:
     server: https://kubernetes.default.svc
