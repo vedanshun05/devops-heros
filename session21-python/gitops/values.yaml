@@ -4,7 +4,7 @@ backend:
 frontend:
   image: ghcr.io/vedanshun05/labboard-frontend
   tag: 0760dda471aaf010996527177f6966506dff4ade
-replicaCount: 3
+replicaCount: 2
 ingress:
   enabled: true
   host: labboard.local
