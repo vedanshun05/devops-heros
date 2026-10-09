@@ -1,6 +1,31 @@
 grafana:
   enabled: true
+  grafana.ini:
+    auth.anonymous:
+      enabled: true
+      org_role: Viewer
+  dashboards:
+    default:
+      labboard:
+        json: |
+          {"uid":"labboard","title":"LabBoard application health","schemaVersion":39,"version":1,"refresh":"5s","time":{"from":"now-15m","to":"now"},"panels":[{"id":1,"title":"HTTP requests","type":"timeseries","gridPos":{"x":0,"y":0,"w":12,"h":8},"targets":[{"expr":"sum(http_requests_total{namespace=\"taskboard\"})","legendFormat":"Requests","refId":"A"}]},{"id":2,"title":"Backend memory (MiB)","type":"timeseries","gridPos":{"x":12,"y":0,"w":12,"h":8},"targets":[{"expr":"process_resident_memory_bytes{namespace=\"taskboard\"}/1024/1024","legendFormat":"{{pod}}","refId":"A"}]},{"id":3,"title":"Application targets up","type":"stat","gridPos":{"x":0,"y":8,"w":12,"h":6},"targets":[{"expr":"sum(up{namespace=\"taskboard\"})","refId":"A"}]},{"id":4,"title":"Backend CPU seconds","type":"timeseries","gridPos":{"x":12,"y":8,"w":12,"h":6},"targets":[{"expr":"process_cpu_seconds_total{namespace=\"taskboard\"}","legendFormat":"{{pod}}","refId":"A"}]}]}
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: default
+          orgId: 1
+          folder: LabBoard
+          type: file
+          disableDeletion: false
+          options: {path: /var/lib/grafana/dashboards/default}
 prometheus:
   prometheusSpec:
     serviceMonitorSelectorNilUsesHelmValues: false
     serviceMonitorNamespaceSelector: {}
+    retention: 2h
+    resources:
+      requests: {cpu: 100m, memory: 256Mi}
+      limits: {cpu: 500m, memory: 768Mi}
+alertmanager:
+  enabled: false

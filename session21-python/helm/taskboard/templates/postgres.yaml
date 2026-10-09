@@ -1,3 +1,4 @@
+{{- if not .Values.postgres.existingSecret }}
 apiVersion: v1
 kind: Secret
 metadata: {name: taskboard-postgres}
@@ -5,6 +6,7 @@ type: Opaque
 stringData:
   username: {{ .Values.postgres.username | quote }}
   password: {{ .Values.postgres.password | quote }}
+{{- end }}
 ---
 apiVersion: v1
 kind: Service
@@ -14,9 +16,10 @@ spec:
   ports: [{port: 5432, targetPort: 5432}]
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata: {name: taskboard-postgres}
 spec:
+  serviceName: taskboard-postgres
   replicas: 1
   selector: {matchLabels: {app: taskboard-postgres}}
   template:

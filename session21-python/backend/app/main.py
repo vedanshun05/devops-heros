@@ -2,21 +2,40 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
-from prometheus_fastapi_instrumentator import Instrumentator
+from contextlib import asynccontextmanager
+from time import monotonic
+from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
+from fastapi.responses import Response
 
 from .config import settings
 from .db import Base, engine, get_db
 from .models import Task
 from .schemas import StatsOut, TaskCreate, TaskOut, TaskUpdate
 
-app = FastAPI(title=settings.app_name, version="1.0.0")
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
-Instrumentator().instrument(app).expose(app, endpoint="/metrics")
-
-@app.on_event("startup")
-def startup():
-    # Production containers run Alembic before Uvicorn; create_all keeps tests self-contained.
+@asynccontextmanager
+async def lifespan(app):
     Base.metadata.create_all(bind=engine)
+    yield
+
+app = FastAPI(title=settings.app_name, version="1.0.0", lifespan=lifespan)
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+requests_total = Counter("http_requests_total", "HTTP requests", ["method", "handler", "status"])
+request_duration = Histogram("http_request_duration_seconds", "HTTP latency", ["method", "handler"])
+
+@app.middleware("http")
+async def metrics(request, call_next):
+    started = monotonic()
+    response = await call_next(request)
+    route = request.scope.get("route")
+    handler = getattr(route, "path", "unmatched")
+    if handler != "/metrics":
+        requests_total.labels(request.method, handler, str(response.status_code)).inc()
+        request_duration.labels(request.method, handler).observe(monotonic() - started)
+    return response
+
+@app.get("/metrics")
+def prometheus_metrics():
+    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 @app.get("/")
 def root():
