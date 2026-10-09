@@ -252,27 +252,15 @@ In the AWS console, select **Asia Pacific (Mumbai)** for VPC and EC2. Check `ses
 
 ## Step 9 — Collect the screenshots
 
-Save new screenshots in `../Outputs/mini-project/` using these names:
+Evidence was collected on 9 October 2026 from `08-mini-project`. The AWS checks below use the real CLI/API responses; they are not console screenshots. The earlier `mini-*` images show the separate networking lab.
 
-| Screenshot | What it should show |
-| :-- | :-- |
-| `extended-init-validate.png` | Correct directory, successful init and validation |
-| `extended-plan.png` | Plan summary and EC2/S3 additions |
-| `extended-apply.png` | Successful apply summary |
-| `extended-state-output.png` | State list and outputs including EC2 and S3 |
-| `extended-aws-vpc.png` | `session19-mini-vpc` with `10.20.0.0/16` |
-| `extended-aws-ec2.png` | Running `session19-mini-web` instance |
-| `extended-aws-s3.png` | Private bucket and `index.html` object |
-| `extended-website.png` | Page loaded through the EC2 HTTP URL |
-| `extended-destroy.png` | Successful destroy summary |
-
-The existing `mini-*` screenshots show the older `06-terraform-vpc` lab. They do not prove this extended project was deployed.
-
-After saving the new images, add Markdown image links here, for example:
-
-```markdown
-![Extended mini-project website](../Outputs/mini-project/extended-website.png)
-```
+![Initialization and validation](../Outputs/mini-project/extended-init-validate.png)
+![15-resource plan](../Outputs/mini-project/extended-plan.png)
+![15-resource apply](../Outputs/mini-project/extended-apply.png)
+![State and outputs](../Outputs/mini-project/extended-state-output.png)
+![AWS EC2 and private S3 checks](../Outputs/mini-project/extended-aws-verification.png)
+![Live website](../Outputs/mini-project/extended-website.png)
+![All 15 resources destroyed](../Outputs/mini-project/extended-destroy.png)
 
 ## Step 10 — Destroy after collecting evidence
 
@@ -323,14 +311,14 @@ The startup script writes `[INFO]` and `[ERROR]` messages. Instance boot logs ca
 
 ## Submission checklist
 
-- [ ] Terraform project files and provider lock file.
-- [ ] Architecture diagram and explanation of dependencies.
-- [ ] Successful plan and apply evidence from `08-mini-project`.
-- [ ] AWS console evidence for VPC, EC2, and S3.
-- [ ] Browser evidence that the website works.
-- [ ] Terraform state and output evidence.
-- [ ] Destroy evidence.
-- [ ] README and actual screenshots committed; no state, credentials, or plan files committed.
+- [x] Terraform project files and provider lock file.
+- [x] Architecture diagram and explanation of dependencies.
+- [x] Successful plan and apply evidence from `08-mini-project`.
+- [x] Terraform VPC outputs and AWS API evidence for EC2 and private S3.
+- [x] Browser evidence that the website works.
+- [x] Terraform state and output evidence.
+- [x] Destroy evidence.
+- [x] README and actual screenshots committed; no state, credentials, or plan files committed.
 
 ## References
 
