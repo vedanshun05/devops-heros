@@ -1,0 +1,17 @@
+# Parallel clients generate HTTP requests until the Job is deleted.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hpa-load-generator
+spec:
+  parallelism: 4
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: load
+          image: busybox:1.37
+          command: [sh, -c, 'while true; do wget -q -O /dev/null http://hpa-demo-service; done']
+          resources:
+            requests: {cpu: 10m, memory: 16Mi}
+            limits: {cpu: 250m, memory: 32Mi}
