@@ -12,7 +12,8 @@ module "vpc" {
   public_subnet_tags      = { "kubernetes.io/role/elb" = "1" }
 }
 
-# Explicit operator role: EKS access entries do not support a root-user principal.
+# EKS access entries require an IAM role/user. Account-root trust delegates to
+# account IAM identities with sts:AssumeRole permission; root itself cannot assume roles.
 resource "aws_iam_role" "operator" {
   name = "${var.cluster_name}-operator"
   assume_role_policy = jsonencode({
@@ -21,7 +22,7 @@ resource "aws_iam_role" "operator" {
       Effect    = "Allow"
       Action    = "sts:AssumeRole"
       Principal = { AWS = data.aws_caller_identity.current.arn }
-      Condition = { ArnEquals = { "aws:PrincipalArn" = data.aws_caller_identity.current.arn } }
+      Condition = endswith(data.aws_caller_identity.current.arn, ":root") ? {} : { ArnEquals = { "aws:PrincipalArn" = data.aws_caller_identity.current.arn } }
     }]
   })
 }
@@ -56,7 +57,7 @@ module "eks" {
   }
   eks_managed_node_groups = {
     lab = {
-      instance_types = ["t3.medium"]
+      instance_types = ["t3.small"]
       ami_type       = "AL2023_x86_64_STANDARD"
       min_size       = 1
       max_size       = 2
@@ -96,8 +97,12 @@ resource "aws_iam_role_policy_attachment" "ebs" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
 }
 resource "aws_eks_addon" "ebs" {
-  cluster_name             = module.eks.cluster_name
-  addon_name               = "aws-ebs-csi-driver"
+  cluster_name = module.eks.cluster_name
+  addon_name   = "aws-ebs-csi-driver"
+  configuration_values = jsonencode({
+    controller          = { replicaCount = 1 }
+    defaultStorageClass = { enabled = true }
+  })
   service_account_role_arn = aws_iam_role.ebs.arn
   depends_on               = [aws_iam_role_policy_attachment.ebs]
 }
