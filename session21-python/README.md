@@ -20,8 +20,6 @@ LabBoard is my DevOps homework tracker: create and edit lab tasks, add notes, as
 | Cloud | VPC + two public subnets + EKS 1.35 Active + one Healthy t3.small worker + two ECR repositories; cleanup recorded below |
 | Troubleshooting | Image-pull failure and empty Service endpoints reproduced, investigated, repaired and verified |
 
-![LabBoard through Kubernetes Ingress](Outputs/ingress-application.png)
-
 ## Architecture and technologies
 
 ```mermaid
