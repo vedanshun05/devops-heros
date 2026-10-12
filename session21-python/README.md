@@ -2,7 +2,7 @@
 
 **Author: Vedanshu Nishad · Verified: 9 October 2026**
 
-LabBoard is my DevOps homework tracker: create lab tasks, assign priorities, move work through TODO / IN PROGRESS / DONE, and view real task statistics and recent activity. It extends the supplied TaskBoard reference with my own lab domain, UI, tests, security fixes and deployment automation. Existing `taskboard` Helm/resource names are retained for compatibility.
+LabBoard is my DevOps homework tracker: create and edit lab tasks, add notes, assign priorities, and move work through TODO / IN PROGRESS / DONE. List and board views share the same saved tasks, with search, status/priority filters, sorting and real task statistics. It extends the supplied TaskBoard reference with my own lab domain, UI, tests, security fixes and deployment automation. Existing `taskboard` Helm/resource names are retained for compatibility.
 
 ## Verified results
 
@@ -50,6 +50,23 @@ The deployment environments are explicit: **CI uses a disposable Kind cluster**,
 Technologies: Python 3.12, FastAPI, SQLAlchemy, Alembic, PostgreSQL 16, React/Vite, Docker/Compose, GitHub Actions, Bandit, pip-audit, npm audit, Trivy, GHCR, Kubernetes, Helm, Nginx Ingress, Terraform, AWS EKS/ECR/VPC/IAM, Prometheus, Grafana and Argo CD.
 
 ## Application and tests
+
+### Interface update — 13 October 2026
+
+The interface uses a paper-and-green palette, a notebook mark, locally bundled Inter typography and compact task rows. Task titles are 15–16 px, body text is 14–16 px, and controls and secondary labels are at least 12 px. All navigation and controls work with the existing API:
+
+- Switch between a task list and a three-column board.
+- Search titles, notes and assignees; filter by status or priority; sort by creation order or priority.
+- Create and edit tasks, change their status directly, and confirm deletion.
+- Failed saves keep the form and entered values available for retry. Dialogs support keyboard focus and Escape; the layout adapts to phones and tablets.
+
+The updated frontend is verified locally through Docker Compose. Browser checks exercised real create/edit/status/delete operations, persistence after reload, filtering, failed-save recovery and layouts at 390, 768, 1024 and 1440 pixels. One disposable verification task was removed after each check; existing tasks were preserved. The CI run linked below is the earlier capstone run, not a CI run of this interface update.
+
+![Updated task list](Outputs/ui-list.png)
+![Working board view](Outputs/ui-board.png)
+![Phone layout](Outputs/ui-mobile.png)
+
+### Run the API tests
 
 From this session directory:
 
