@@ -105,7 +105,6 @@ docker compose -p session21-homework exec frontend id
 Open `http://localhost:3000`. PostgreSQL health checks delay backend startup until the database is ready. The Compose password is a disposable local demonstration value; Kubernetes uses a separate generated runtime Secret. The PostgreSQL named volume preserves tasks across container replacement; `docker compose down -v` deliberately removes it.
 
 ![Compose services and non-root users](Outputs/docker-verification.png)
-![Running Docker application](Outputs/docker-application.png)
 
 ## CI/CD and registry
 
