@@ -1,9 +1,9 @@
 backend:
   image: ghcr.io/vedanshun05/labboard-backend
-  tag: 0760dda471aaf010996527177f6966506dff4ade
+  tag: 9843e0ee0d459034b5970dbf5e40f1cf83d777b9
 frontend:
   image: ghcr.io/vedanshun05/labboard-frontend
-  tag: 0760dda471aaf010996527177f6966506dff4ade
+  tag: 9843e0ee0d459034b5970dbf5e40f1cf83d777b9
 replicaCount: 2
 ingress:
   enabled: true
