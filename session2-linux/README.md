@@ -36,7 +36,6 @@ on this Arch machine, the manual guide uses `useradd`.
 # Task 4: Linux Command Cheat Sheet
 
 These notes explain the commands used in the remaining practice exercise.
-Executed on 9 October 2026; the actual terminal screenshots are below.
 
 | Command | Purpose |
 | --- | --- |
