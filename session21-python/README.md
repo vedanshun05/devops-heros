@@ -1,8 +1,14 @@
 # Session 21 — LabBoard: Final DevOps Project
 
-**Author: Vedanshu Nishad · Verified: 9 October 2026**
+**Author: Vedanshu Nishad** · Capstone evidence: 9 October 2026 · Interface and CI update: 13 October 2026
+
+[Screenshots](#screenshots) · [Architecture](#architecture-and-technologies) · [Run locally](#docker-setup) · [PowerPoint](deliverables/LabBoard-Session21.pptx) · [Video script](deliverables/VIDEO-SCRIPT.md)
 
 LabBoard is my DevOps homework tracker: create and edit lab tasks, add notes, assign priorities, and move work through TODO / IN PROGRESS / DONE. List and board views share the same saved tasks, with search, status/priority filters, sorting and real task statistics. It extends the supplied TaskBoard reference with my own lab domain, UI, tests, security fixes and deployment automation. Existing `taskboard` Helm/resource names are retained for compatibility.
+
+[![LabBoard task list with priorities, status controls and saved lab work](Outputs/ui-list.png)](Outputs/ui-list.png)
+
+*LabBoard task list after the interface update. Select a screenshot to open it at full size.*
 
 ## Verified results
 
@@ -11,7 +17,7 @@ LabBoard is my DevOps homework tracker: create and edit lab tasks, add notes, as
 | Application | React UI + FastAPI CRUD + PostgreSQL/Alembic working in Docker and Kubernetes |
 | Tests | 10 isolated SQLite API tests pass; health, readiness, CRUD, stats, metrics and invalid input covered |
 | Containers | Three Compose services run; backend UID 10001 and frontend UID 101; frontend has a multistage build |
-| CI/CD | All five jobs passed in [run 37946699543](https://github.com/vedanshun05/devops-heros/actions/runs/37946699543) |
+| CI/CD | All five jobs passed for the interface update in [run 38303472047](https://github.com/vedanshun05/devops-heros/actions/runs/38303472047) |
 | Security | Bandit, pip-audit, npm audit, secret scan and both HIGH/CRITICAL container gates pass |
 | Registry | Both GHCR images published with the full source commit SHA; CI pulls those published images for deployment |
 | Kubernetes | Helm release; two frontend and two backend replicas, PostgreSQL StatefulSet/PVC, Services, Ingress, HPA and probes |
@@ -58,11 +64,7 @@ The interface uses a paper-and-green palette, a notebook mark, locally bundled I
 - Create and edit tasks, change their status directly, and confirm deletion.
 - Failed saves keep the form and entered values available for retry. Dialogs support keyboard focus and Escape; the layout adapts to phones and tablets.
 
-The updated frontend is verified locally through Docker Compose. Browser checks exercised real create/edit/status/delete operations, persistence after reload, filtering, failed-save recovery and layouts at 390, 768, 1024 and 1440 pixels. One disposable verification task was removed after each check; existing tasks were preserved. The CI run linked below is the earlier capstone run, not a CI run of this interface update.
-
-![Updated task list](Outputs/ui-list.png)
-![Working board view](Outputs/ui-board.png)
-![Phone layout](Outputs/ui-mobile.png)
+The updated frontend is verified locally through Docker Compose. Browser checks exercised real create/edit/status/delete operations, persistence after reload, filtering, failed-save recovery and layouts at 390, 768, 1024 and 1440 pixels. One disposable verification task was removed after each check; existing tasks were preserved. The interface update also passed all five CI/CD jobs in [run 38303472047](https://github.com/vedanshun05/devops-heros/actions/runs/38303472047).
 
 ### Run the API tests
 
@@ -89,8 +91,6 @@ Tests create a fresh in-memory SQLite database for each case and override FastAP
 | `DELETE /api/tasks/{id}` | Delete a task |
 | `GET /api/tasks/stats` | Dashboard totals |
 
-![Ten API tests passing](Outputs/pytest.png)
-
 ## Docker setup
 
 ```bash
@@ -104,8 +104,6 @@ docker compose -p session21-homework exec frontend id
 
 Open `http://localhost:3000`. PostgreSQL health checks delay backend startup until the database is ready. The Compose password is a disposable local demonstration value; Kubernetes uses a separate generated runtime Secret. The PostgreSQL named volume preserves tasks across container replacement; `docker compose down -v` deliberately removes it.
 
-![Compose services and non-root users](Outputs/docker-verification.png)
-
 ## CI/CD and registry
 
 The active workflow is [`.github/workflows/session21-ci-cd.yml`](../.github/workflows/session21-ci-cd.yml). Its copy inside this session is provided with the coursework; GitHub executes the repository-root workflow. This one root file was explicitly approved as an exception to the session-folder restriction.
@@ -118,24 +116,20 @@ Pushes affecting application, chart, Compose or workflow code on **`session21-py
 4. **deploy:** authenticate to GHCR, pull those exact published images, load Kind, create a runtime DB Secret, deploy Helm and verify health/task API through the frontend proxy.
 5. **gitops:** promote the verified image tags in `gitops/values.yaml` with a bot commit.
 
-Verified source: `0760dda471aaf010996527177f6966506dff4ade`.
+The interface update passed [run 38303472047](https://github.com/vedanshun05/devops-heros/actions/runs/38303472047). The current GitOps configuration records source commit `9843e0ee0d459034b5970dbf5e40f1cf83d777b9` in both image tags:
 
-- `ghcr.io/vedanshun05/labboard-backend:0760dda471aaf010996527177f6966506dff4ade`
-- `ghcr.io/vedanshun05/labboard-frontend:0760dda471aaf010996527177f6966506dff4ade`
+- `ghcr.io/vedanshun05/labboard-backend:9843e0ee0d459034b5970dbf5e40f1cf83d777b9`
+- `ghcr.io/vedanshun05/labboard-frontend:9843e0ee0d459034b5970dbf5e40f1cf83d777b9`
+
+The earlier [capstone run 37946699543](https://github.com/vedanshun05/devops-heros/actions/runs/37946699543) used source `0760dda471aaf010996527177f6966506dff4ade`. Its terminal captures are retained as the original verification evidence in the gallery.
 
 GHCR packages may require authentication. CI uses job-scoped `GITHUB_TOKEN` permissions; a separate cluster pulling private packages needs an `imagePullSecret` with package read access. Credentials are supplied at runtime and are not stored in this repository.
-
-![All five pipeline jobs succeeded](Outputs/pipeline-success.png)
-![Actual published image pulls and deployment logs](Outputs/registry-deploy.png)
-![Repository commit history](Outputs/commit-history.png)
 
 ## DevSecOps results
 
 The original Python dependency graph contained vulnerable dependencies, and the original frontend image failed its gate. The final dependency lock, Alpine backend and updated unprivileged Nginx runtime passed SCA and container gates. A custom `prometheus_client` middleware replaces the old metrics wrapper so the app can use the repaired dependency graph.
 
 Trivy scanned OS packages and application dependencies in both images. The CI result was **zero HIGH/CRITICAL findings** at scan time, with `exit-code: 1` configured for failures. This result describes that severity gate and database snapshot; it is not a claim that future vulnerabilities cannot appear.
-
-![Both container gates in the actual pipeline](Outputs/trivy-ci.png)
 
 ## Kubernetes and Helm deployment
 
@@ -160,12 +154,7 @@ For browser access, map `labboard.local` to the Minikube IP in your local DNS/ho
 
 The backend has startup, readiness and liveness probes, CPU/memory requests and limits. HPA targets 60% CPU and keeps 2–6 replicas. Argo CD ignores the backend's replica field so HPA and GitOps do not fight each other.
 
-![Running pods and ClusterIP Services](Outputs/kubernetes.png)
-![PVC, Ingress, HPA, Helm and healthy Argo CD](Outputs/kubernetes-storage.png)
-
 A task was created, the PostgreSQL pod deleted, and the same task read after the replacement pod became Ready. Its ID and content persisted on the Bound 5 GiB PVC.
-
-![Actual persistence check](Outputs/pvc-persistence.png)
 
 ## Terraform and AWS infrastructure
 
@@ -194,17 +183,7 @@ The first apply also lost credentials while EKS was being created. After verifyi
 
 AWS evidence below is from actual CLI/API responses, rather than console screenshots. An IAM user/role with permission to assume the operator role is required for `aws eks update-kubeconfig --role-arn`; root credentials cannot assume it. No IAM user or permanent access key was created for this homework.
 
-![Terraform initialization and validation](Outputs/terraform-init.png)
-![Original reviewed infrastructure plan](Outputs/terraform-plan.png)
-![Eligible worker recovery plan](Outputs/terraform-node-plan.png)
-![Final apply result](Outputs/terraform-apply.png)
-![AWS VPC and Active EKS worker](Outputs/aws-infrastructure.png)
-![Actual public subnets, worker EC2 and ECR repositories](Outputs/aws-resources.png)
-![Destroy and empty state](Outputs/terraform-destroy.png)
-
 **Cleanup verified:** applying the reviewed destroy plan removed all 56 remaining Terraform resources. `terraform state list` is empty. AWS queries show no lab cluster, VPC or ECR repositories, and both cloud-lab EC2 instances are terminated. The EKS KMS key is `PendingDeletion` until **8 November 2026**, following AWS's deletion window; its key deletion is scheduled rather than immediate.
-
-![Empty state and AWS cleanup checks](Outputs/aws-cleanup.png)
 
 ## Monitoring and logs
 
@@ -223,10 +202,6 @@ Prometheus scrapes `/metrics` through the ServiceMonitor every 15 seconds. Both 
 
 Open Prometheus at `http://localhost:19090/targets?search=taskboard` and Grafana at `http://localhost:13100/d/labboard/labboard-application-health`. Anonymous Grafana Viewer access is enabled for this disposable local demo through a localhost port-forward. Configure authenticated access before wider exposure.
 
-![Live application metrics](Outputs/metrics.png)
-![Both application targets UP](Outputs/prometheus-targets.png)
-![Populated Grafana dashboard](Outputs/grafana-dashboard.png)
-
 ## GitOps demonstration
 
 Argo CD watches the submitted `session21-python` branch and renders the same Helm chart with its base values and `gitops/values.yaml`. [gitops/application.yaml](gitops/application.yaml) enables automatic sync, pruning and self-healing, while respecting the HPA-managed replica field.
@@ -238,8 +213,6 @@ kubectl get application labboard -n argocd
 ```
 
 The successful pipeline promoted its SHA image versions to Git. Commit `3508aa3` then changed the replica count from 2 to 3; Argo CD automatically applied it. A manual scale to 1 drifted from Git and self-healed to 3. Commit `e0c1613` restored the final count to 2, and the Application returned to Synced/Healthy. These GitOps commits are separate from the tested image source SHA.
-
-![Git change and automatic drift repair](Outputs/gitops-self-heal.png)
 
 ## Final troubleshooting challenge
 
@@ -261,10 +234,73 @@ kubectl get endpointslices -n taskboard -l kubernetes.io/service-name=broken-ser
 kubectl delete -f troubleshooting/broken-image.yaml -f troubleshooting/broken-service.yaml
 ```
 
-![Initial failure and investigation](Outputs/troubleshooting-failures.png)
-![Repairs and verification](Outputs/troubleshooting.png)
+## Screenshots
+
+Recorded evidence from the project runs described above. The app preview at the top and the board and phone views show the updated interface. AWS screenshots contain CLI/API results from provisioning and cleanup. Select any image to inspect it at full size.
+
+### Application
+
+| What it shows | Screenshot |
+| :-- | :-- |
+| Board view after the interface update | [![LabBoard board view with tasks grouped by status](Outputs/ui-board.png)](Outputs/ui-board.png) |
+| Responsive phone layout | [<img src="Outputs/ui-mobile.png" alt="LabBoard task list on a phone" width="230">](Outputs/ui-mobile.png) |
+
+### Tests, containers and CI/CD
+
+| What it shows | Screenshot |
+| :-- | :-- |
+| Ten API tests passing | [![Pytest output showing ten API tests passed](Outputs/pytest.png)](Outputs/pytest.png) |
+| Docker Compose services and non-root application users | [![Three running Compose services, container user IDs and API checks](Outputs/docker-verification.png)](Outputs/docker-verification.png) |
+| Session 21 project repository | [![GitHub repository showing the Session 21 project folders](Outputs/github-repository.png)](Outputs/github-repository.png) |
+| Interface update pipeline — all five jobs successful | [![GitHub Actions run for the interface update with five successful jobs](Outputs/github-pipeline.png)](Outputs/github-pipeline.png) |
+| Original capstone pipeline — all five jobs successful | [![Original capstone pipeline verification showing five successful jobs](Outputs/pipeline-success.png)](Outputs/pipeline-success.png) |
+| Trivy container security gates | [![Recorded Trivy scan results for both application images](Outputs/trivy-ci.png)](Outputs/trivy-ci.png) |
+| Published GHCR image pulls and deployment verification | [![CI logs showing published image pulls and deployment checks](Outputs/registry-deploy.png)](Outputs/registry-deploy.png) |
+| Repository commit history | [![Recorded Git commit history for the project](Outputs/commit-history.png)](Outputs/commit-history.png) |
+
+### Kubernetes, monitoring and GitOps
+
+| What it shows | Screenshot |
+| :-- | :-- |
+| Running application and database pods with ClusterIP Services | [![Kubernetes pod and Service output for LabBoard](Outputs/kubernetes.png)](Outputs/kubernetes.png) |
+| Persistent storage, Ingress, HPA, Helm release and Argo CD status | [![PVC, Ingress, HPA, Helm and Argo CD verification output](Outputs/kubernetes-storage.png)](Outputs/kubernetes-storage.png) |
+| Same saved task after replacing the PostgreSQL pod | [![Database pod replacement and verification that the saved task persisted](Outputs/pvc-persistence.png)](Outputs/pvc-persistence.png) |
+| Backend metrics endpoint | [![Recorded output from the Prometheus metrics endpoint](Outputs/metrics.png)](Outputs/metrics.png) |
+| Both backend targets UP in Prometheus | [![Prometheus target page showing both backend targets UP](Outputs/prometheus-targets.png)](Outputs/prometheus-targets.png) |
+| Populated Grafana application dashboard | [![Grafana dashboard showing application requests and resource metrics](Outputs/grafana-dashboard.png)](Outputs/grafana-dashboard.png) |
+| Git configuration change and automatic drift repair | [![Recorded GitOps replica change and Argo CD self-healing results](Outputs/gitops-self-heal.png)](Outputs/gitops-self-heal.png) |
+
+### Terraform and AWS lifecycle
+
+| What it shows | Screenshot |
+| :-- | :-- |
+| Terraform initialization and validation | [![Terraform initialization and validation output](Outputs/terraform-init.png)](Outputs/terraform-init.png) |
+| Original infrastructure plan | [![Reviewed Terraform infrastructure plan](Outputs/terraform-plan.png)](Outputs/terraform-plan.png) |
+| Recovery plan using an eligible worker instance | [![Terraform recovery plan for the eligible worker instance type](Outputs/terraform-node-plan.png)](Outputs/terraform-node-plan.png) |
+| Completed Terraform apply | [![Recorded successful Terraform apply output](Outputs/terraform-apply.png)](Outputs/terraform-apply.png) |
+| AWS VPC, Active EKS cluster and healthy worker | [![Recorded AWS CLI verification of VPC, EKS cluster and worker health](Outputs/aws-infrastructure.png)](Outputs/aws-infrastructure.png) |
+| Public subnets, EC2 worker and ECR repositories | [![Recorded AWS CLI output for subnets, worker and registries](Outputs/aws-resources.png)](Outputs/aws-resources.png) |
+| Terraform destroy and empty state | [![Terraform destroy output and empty state verification](Outputs/terraform-destroy.png)](Outputs/terraform-destroy.png) |
+| AWS cleanup checks and scheduled encryption-key deletion | [![Recorded AWS cleanup verification and scheduled KMS key deletion](Outputs/aws-cleanup.png)](Outputs/aws-cleanup.png) |
+
+### Troubleshooting
+
+| What it shows | Screenshot |
+| :-- | :-- |
+| Initial image-pull failure and Service routing investigation | [![Recorded image-pull failure and empty Service endpoint investigation](Outputs/troubleshooting-failures.png)](Outputs/troubleshooting-failures.png) |
+| Repairs and successful verification | [![Recorded repaired pod and successful request through the corrected Service](Outputs/troubleshooting.png)](Outputs/troubleshooting.png) |
 
 ## Lessons learned and demo walkthrough
+
+Use [VIDEO-SCRIPT.md](deliverables/VIDEO-SCRIPT.md) for preparation commands, timed narration, screen actions and cleanup. Target recording length: **1 minute 50 seconds**.
+
+Submission materials for the PPT and video option:
+
+- [PowerPoint presentation](deliverables/LabBoard-Session21.pptx): 14 slides for a non-technical audience, covering what, why and how I built the project, the technology stack and a retrospective trade-off comparison. Includes the four requested screenshots: CI/CD pipeline, repository, Kubernetes deployment and Docker Compose output. Uses short fade transitions and click-controlled content reveals.
+- [Editable OmaShow presentation](deliverables/LabBoard-Session21.omashow): the animated source deck, with speaker notes. In slideshow mode, press Space to reveal each group, then press again to advance after the slide is fully shown. The presentation uses the Inter font.
+- [Video recording script](deliverables/VIDEO-SCRIPT.md): narration in my own voice and timed screen actions for a **1 minute 50 second** video, kept strictly **under 2 minutes**. Shows the live application, Docker Compose, repository, CI/CD and recorded Kubernetes evidence.
+
+### Lessons learned
 
 - Readiness, liveness and database availability answer different questions; the chart and API check each explicitly.
 - A Service selector and target port must match the actual pods; Running pods alone do not prove routing works.
@@ -272,5 +308,3 @@ kubectl delete -f troubleshooting/broken-image.yaml -f troubleshooting/broken-se
 - Scan dependencies and runtime OS packages; non-root execution and a clean CVE gate provide different protections.
 - Keep HPA ownership separate from GitOps replica reconciliation.
 - Long cloud operations need refreshable credentials, account-compatible instance types and a retained Terraform state for cleanup.
-
-For the presentation: open the UI, create a lab task, show the ten tests and successful pipeline, show SHA-tagged deployment logs, inspect Kubernetes resources, show the populated metrics dashboard, demonstrate a GitOps replica change, then explain the two repairs and AWS teardown evidence. The screenshots and run above are executed evidence; an instructor presentation is a separate human activity.
