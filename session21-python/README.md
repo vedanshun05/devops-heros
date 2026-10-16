@@ -1,6 +1,6 @@
 # Session 21 — LabBoard: Final DevOps Project
 
-**Author: Vedanshu Nishad** · Capstone evidence: 9 October 2026 · Interface and CI update: 13 October 2026
+**Author: Vedanshu Nishad** · Capstone evidence: 9 October 2026 · Interface and CI update: 13 October 2026 · Foot captures: 16 October 2026
 
 [Screenshots](#screenshots) · [Architecture](#architecture-and-technologies) · [Run locally](#docker-setup) · [PowerPoint](deliverables/LabBoard-Session21.pptx) · [Video script](deliverables/VIDEO-SCRIPT.md)
 
@@ -22,7 +22,7 @@ LabBoard is my DevOps homework tracker: create and edit lab tasks, add notes, as
 | Registry | Both GHCR images published with the full source commit SHA; CI pulls those published images for deployment |
 | Kubernetes | Helm release; two frontend and two backend replicas, PostgreSQL StatefulSet/PVC, Services, Ingress, HPA and probes |
 | Monitoring | Both backend targets UP; Grafana shows live HTTP requests, memory, CPU and health |
-| GitOps | Argo CD Synced/Healthy; Git change scaled frontend 2 → 3; manual drift 3 → 1 healed to 3; Git restored 2 |
+| GitOps | Argo CD Synced/Healthy; fresh Foot capture shows frontend drift 2 → 1 restored automatically to 2 |
 | Cloud | VPC + two public subnets + EKS 1.35 Active + one Healthy t3.small worker + two ECR repositories; cleanup recorded below |
 | Troubleshooting | Image-pull failure and empty Service endpoints reproduced, investigated, repaired and verified |
 
@@ -49,7 +49,7 @@ flowchart TD
   Terraform --> AWS[VPC + two public subnets + EKS worker + ECR + IAM]
 ```
 
-The deployment environments are explicit: **CI uses a disposable Kind cluster**, and **the monitored GitOps demo uses Minikube**. AWS infrastructure was provisioned separately and torn down after evidence. This run did not deploy the app to EKS: the available AWS login is root, which cannot assume the EKS operator role. Local Minikube uses images built from the verified source and loaded into its cache; CI independently verifies the exact published GHCR images.
+The deployment environments are explicit: **CI uses a disposable Kind cluster**, and **the monitored GitOps demo uses Minikube**. AWS infrastructure is a separate Terraform lifecycle exercise. The application demonstration uses Minikube; the cloud screenshots document infrastructure provisioning, verification and teardown. Local Minikube uses images built from the verified source and loaded into its cache; CI independently verifies the exact published GHCR images.
 
 Technologies: Python 3.12, FastAPI, SQLAlchemy, Alembic, PostgreSQL 16, React/Vite, Docker/Compose, GitHub Actions, Bandit, pip-audit, npm audit, Trivy, GHCR, Kubernetes, Helm, Nginx Ingress, Terraform, AWS EKS/ECR/VPC/IAM, Prometheus, Grafana and Argo CD.
 
@@ -121,7 +121,7 @@ The interface update passed [run 38303472047](https://github.com/vedanshun05/dev
 - `ghcr.io/vedanshun05/labboard-backend:9843e0ee0d459034b5970dbf5e40f1cf83d777b9`
 - `ghcr.io/vedanshun05/labboard-frontend:9843e0ee0d459034b5970dbf5e40f1cf83d777b9`
 
-The earlier [capstone run 37946699543](https://github.com/vedanshun05/devops-heros/actions/runs/37946699543) used source `0760dda471aaf010996527177f6966506dff4ade`. Its terminal captures are retained as the original verification evidence in the gallery.
+The earlier [capstone run 37946699543](https://github.com/vedanshun05/devops-heros/actions/runs/37946699543) used source `0760dda471aaf010996527177f6966506dff4ade`. The CI terminal screenshots now retrieve the interface-update run through the GitHub CLI in Foot, retaining the original CI timestamps.
 
 GHCR packages may require authentication. CI uses job-scoped `GITHUB_TOKEN` permissions; a separate cluster pulling private packages needs an `imagePullSecret` with package read access. Credentials are supplied at runtime and are not stored in this repository.
 
@@ -175,15 +175,13 @@ terraform destroy -var='allowed_cidrs=["YOUR_PUBLIC_IP/32"]'
 terraform state list
 ```
 
-The fresh plan contained 56 Terraform resources. AWS rejected the original `t3.medium` node because this account restricts launches to Free Tier eligible types. Querying `describe-instance-types` identified `t3.small`; Terraform replaced the failed node group with one eligible worker. The final node group was Active, with no health issues, and EC2/Auto Scaling showed its instance running and Healthy.
+On **16 October 2026**, the reviewed plan created **56 resources**. The EKS 1.35 cluster and managed node group became Active, the single `t3.small` EC2 worker was Healthy, and `kubectl get nodes` showed it Ready. Both ECR repositories used immutable image tags. These checks were run in the actual Foot terminal. The application itself was demonstrated on Minikube; no application workload was deployed to EKS for this infrastructure capture.
 
-After the live checks were saved, deletion of the verified worker was started while AWS finished deleting the failed original worker group. The failed group's empty Auto Scaling group was also removed to stop unsuccessful launch retries. Terraform state was retained throughout, and final cleanup was continued from that state. AWS held the worker in a termination lifecycle wait; its lab EC2 instance was terminated directly after verification.
+The original 9 October run encountered an account restriction on `t3.medium` and expired credentials during provisioning. The refreshed run uses the corrected `t3.small` configuration and refreshable, short-lived AWS credentials. Terraform's pinned provider receives those credentials through a temporary AWS CLI credential process. Credentials, saved plans, state and caches are excluded from Git.
 
-The first apply also lost credentials while EKS was being created. After verifying that AWS had created an Active cluster, Terraform's tainted state was reconciled, and a credential process refreshed short-lived credentials during the long operation. Credentials, saved plans, state and caches are excluded from Git.
+An existing IAM login assumed the Terraform-created operator role for the EKS node check. No IAM user or permanent access key was created for this homework. After the screenshots, the reviewed destroy plan contained the same **56 managed resources**, with no additions or changes.
 
-AWS evidence below is from actual CLI/API responses, rather than console screenshots. An IAM user/role with permission to assume the operator role is required for `aws eks update-kubeconfig --role-arn`; root credentials cannot assume it. No IAM user or permanent access key was created for this homework.
-
-**Cleanup verified:** applying the reviewed destroy plan removed all 56 remaining Terraform resources. `terraform state list` is empty. AWS queries show no lab cluster, VPC or ECR repositories, and both cloud-lab EC2 instances are terminated. The EKS KMS key is `PendingDeletion` until **8 November 2026**, following AWS's deletion window; its key deletion is scheduled rather than immediate.
+**Cleanup verified — 16 October 2026:** the reviewed destroy plan removed **56 resources**, and `terraform state list` is empty. AWS queries show no lab EKS cluster, VPC or ECR repositories, and the verified worker is terminated. The disposable worker paused in `Terminating:Wait`; its termination hook was continued, then Terraform finished cleanup. Two encryption keys remain in `PendingDeletion`: the earlier run's key until **8 November 2026**, and this capture run's key until **15 November 2026**. Their deletion is scheduled, rather than immediate.
 
 ## Monitoring and logs
 
@@ -212,7 +210,7 @@ kubectl apply -f gitops/application.yaml
 kubectl get application labboard -n argocd
 ```
 
-The successful pipeline promoted its SHA image versions to Git. Commit `3508aa3` then changed the replica count from 2 to 3; Argo CD automatically applied it. A manual scale to 1 drifted from Git and self-healed to 3. Commit `e0c1613` restored the final count to 2, and the Application returned to Synced/Healthy. These GitOps commits are separate from the tested image source SHA.
+The successful pipeline promoted its SHA image versions to Git. Commit `3508aa3` then changed the replica count from 2 to 3; Argo CD automatically applied it. A manual scale to 1 drifted from Git and self-healed to 3. Commit `e0c1613` restored the final count to 2, and the Application returned to Synced/Healthy. These GitOps commits are separate from the tested image source SHA. The 16 October Foot capture repeats the drift check against the current Git setting: frontend 2 → 1 → 2, followed by Synced / Healthy status.
 
 ## Final troubleshooting challenge
 
@@ -222,8 +220,8 @@ The supplied broken manifests are intentionally retained for replay. The repairs
 | :-- | :-- | :-- |
 | Bad image | Pod status/events showed an image-pull failure; the example GHCR tag does not exist | Replace its pod spec with the working backend spec, including valid image and DB references; rollout completed and pod became Running |
 | Empty endpoints | `broken-service` selected `label-that-does-not-exist`; EndpointSlice had no endpoints | Select `app: taskboard-backend`; set targetPort 8000; EndpointSlice contained both pod IPs and `/health` returned UP through the repaired Service |
-| AWS worker could not launch | Auto Scaling activity showed Free Tier eligibility rejection | Change Terraform to eligible `t3.small`; node group Active and instance Healthy |
-| Stalled AWS authentication | Expired temporary credentials interrupted the original apply | Refresh through a credential process; reconcile the confirmed existing cluster before continuing |
+| AWS worker could not launch (original 9 October run) | Auto Scaling activity showed Free Tier eligibility rejection | Change Terraform to eligible `t3.small`; node group Active and instance Healthy |
+| Stalled AWS authentication (original 9 October run) | Expired temporary credentials interrupted the original apply | Refresh through a credential process; reconcile the confirmed existing cluster before continuing |
 
 ```bash
 kubectl apply -f troubleshooting/broken-image.yaml -f troubleshooting/broken-service.yaml
@@ -236,7 +234,7 @@ kubectl delete -f troubleshooting/broken-image.yaml -f troubleshooting/broken-se
 
 ## Screenshots
 
-Recorded evidence from the project runs described above. The app preview at the top and the board and phone views show the updated interface. AWS screenshots contain CLI/API results from provisioning and cleanup. Select any image to inspect it at full size.
+The [capture record](Outputs/foot-captures.json) lists the commands, capture times, crop dimensions and SHA-256 hashes for all 22 terminal images. Terminal screenshots were captured directly from the actual Foot terminal on 16 October 2026 using Omarchy screenshot capture. Commands ran against the local Docker/Minikube lab and AWS; the GitHub CLI captures retrieve the completed CI run with its original timestamps. Screenshots are cropped to the relevant output; the text and pixels inside each crop are unchanged. The app preview, board and phone views show the updated interface. Select any image to inspect it at full size.
 
 ### Application
 
@@ -250,10 +248,11 @@ Recorded evidence from the project runs described above. The app preview at the 
 | What it shows | Screenshot |
 | :-- | :-- |
 | Ten API tests passing | [![Pytest output showing ten API tests passed](Outputs/pytest.png)](Outputs/pytest.png) |
+| Docker Compose build and startup | [![Actual Foot terminal showing Docker Compose building and starting the application](Outputs/docker-compose-build.png)](Outputs/docker-compose-build.png) |
 | Docker Compose services and non-root application users | [![Three running Compose services, container user IDs and API checks](Outputs/docker-verification.png)](Outputs/docker-verification.png) |
 | Session 21 project repository | [![GitHub repository showing the Session 21 project folders](Outputs/github-repository.png)](Outputs/github-repository.png) |
 | Interface update pipeline — all five jobs successful | [![GitHub Actions run for the interface update with five successful jobs](Outputs/github-pipeline.png)](Outputs/github-pipeline.png) |
-| Original capstone pipeline — all five jobs successful | [![Original capstone pipeline verification showing five successful jobs](Outputs/pipeline-success.png)](Outputs/pipeline-success.png) |
+| GitHub CLI result — source commit and five successful jobs | [![Foot terminal showing the actual GitHub Actions run and five successful jobs](Outputs/pipeline-success.png)](Outputs/pipeline-success.png) |
 | Trivy container security gates | [![Recorded Trivy scan results for both application images](Outputs/trivy-ci.png)](Outputs/trivy-ci.png) |
 | Published GHCR image pulls and deployment verification | [![CI logs showing published image pulls and deployment checks](Outputs/registry-deploy.png)](Outputs/registry-deploy.png) |
 | Repository commit history | [![Recorded Git commit history for the project](Outputs/commit-history.png)](Outputs/commit-history.png) |
@@ -268,19 +267,19 @@ Recorded evidence from the project runs described above. The app preview at the 
 | Backend metrics endpoint | [![Recorded output from the Prometheus metrics endpoint](Outputs/metrics.png)](Outputs/metrics.png) |
 | Both backend targets UP in Prometheus | [![Prometheus target page showing both backend targets UP](Outputs/prometheus-targets.png)](Outputs/prometheus-targets.png) |
 | Populated Grafana application dashboard | [![Grafana dashboard showing application requests and resource metrics](Outputs/grafana-dashboard.png)](Outputs/grafana-dashboard.png) |
-| Git configuration change and automatic drift repair | [![Recorded GitOps replica change and Argo CD self-healing results](Outputs/gitops-self-heal.png)](Outputs/gitops-self-heal.png) |
+| Frontend drift 2 → 1 → 2 and automatic repair | [![Recorded GitOps replica change and Argo CD self-healing results](Outputs/gitops-self-heal.png)](Outputs/gitops-self-heal.png) |
 
 ### Terraform and AWS lifecycle
 
 | What it shows | Screenshot |
 | :-- | :-- |
 | Terraform initialization and validation | [![Terraform initialization and validation output](Outputs/terraform-init.png)](Outputs/terraform-init.png) |
-| Original infrastructure plan | [![Reviewed Terraform infrastructure plan](Outputs/terraform-plan.png)](Outputs/terraform-plan.png) |
-| Recovery plan using an eligible worker instance | [![Terraform recovery plan for the eligible worker instance type](Outputs/terraform-node-plan.png)](Outputs/terraform-node-plan.png) |
+| Reviewed infrastructure plan — 56 resources | [![Reviewed Terraform infrastructure plan](Outputs/terraform-plan.png)](Outputs/terraform-plan.png) |
+| Managed worker plan — one t3.small instance | [![Foot terminal showing the reviewed t3.small worker configuration](Outputs/terraform-node-plan.png)](Outputs/terraform-node-plan.png) |
 | Completed Terraform apply | [![Recorded successful Terraform apply output](Outputs/terraform-apply.png)](Outputs/terraform-apply.png) |
 | AWS VPC, Active EKS cluster and healthy worker | [![Recorded AWS CLI verification of VPC, EKS cluster and worker health](Outputs/aws-infrastructure.png)](Outputs/aws-infrastructure.png) |
 | Public subnets, EC2 worker and ECR repositories | [![Recorded AWS CLI output for subnets, worker and registries](Outputs/aws-resources.png)](Outputs/aws-resources.png) |
-| Terraform destroy and empty state | [![Terraform destroy output and empty state verification](Outputs/terraform-destroy.png)](Outputs/terraform-destroy.png) |
+| Terraform destroy — 56 resources removed | [![Foot terminal showing completed Terraform destroy](Outputs/terraform-destroy.png)](Outputs/terraform-destroy.png) |
 | AWS cleanup checks and scheduled encryption-key deletion | [![Recorded AWS cleanup verification and scheduled KMS key deletion](Outputs/aws-cleanup.png)](Outputs/aws-cleanup.png) |
 
 ### Troubleshooting

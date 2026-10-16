@@ -1,0 +1,592 @@
+{
+  "schemaVersion": 1,
+  "method": "Actual host Foot terminal; Omarchy fullscreen screenshot; rectangular crop only.",
+  "pixelEdits": "None inside crop rectangles.",
+  "workingDirectory": "session21-python",
+  "terminalCaptures": [
+    {
+      "name": "pytest",
+      "file": "pytest.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:24:32+0530",
+      "command": "docker compose -p session21-homework run --rm --no-deps -v \"$PWD/backend/tests:/app/tests:ro\" -v \"$PWD/backend/pytest.ini:/app/pytest.ini:ro\" backend pytest -v -p no:cacheprovider /app/tests",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        2,
+        6,
+        1915,
+        730
+      ],
+      "size": [
+        1913,
+        724
+      ],
+      "rawCaptureSha256": "2f44b9c00d4753c6d09aaee7828ef9dd86ad4f3cf8d3dd01c28a211cecf76897",
+      "sha256": "c3001d98cbf654f67a01b4db842e93cbacbf2c0501acea519f6ac97d627b0fc9"
+    },
+    {
+      "name": "docker-verification",
+      "file": "docker-verification.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:26:08+0530",
+      "command": "{\ndocker compose -p session21-homework ps --format \"table {{.Service}}\\t{{.State}}\\t{{.Status}}\\t{{.Ports}}\"\ndocker compose -p session21-homework exec -T backend id\ndocker compose -p session21-homework exec -T frontend id\ncurl -fsS -w \"\\n\" http://localhost:3000/health\ncurl -fsS -w \"\\n\" http://localhost:3000/api/tasks/stats\n}",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        2,
+        6,
+        1104,
+        422
+      ],
+      "size": [
+        1102,
+        416
+      ],
+      "rawCaptureSha256": "4d3799419b9866339569caef864c9bfdc0906dd43f11f894ce246b1a114e56a1",
+      "sha256": "7c8a48886c03703da07517b98dd469179de568183ebd017abf8c86c9ff8057bf"
+    },
+    {
+      "name": "pipeline-success",
+      "file": "pipeline-success.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T22:17:30+0530",
+      "command": "gh run view 38303472047 -R vedanshun05/devops-heros --json databaseId,headSha,conclusion,jobs --jq '{run:.databaseId,commit:.headSha,result:.conclusion,jobs:[.jobs[]|{job:.name,result:.conclusion}]}'",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        3,
+        80,
+        572,
+        730
+      ],
+      "size": [
+        569,
+        650
+      ],
+      "rawCaptureSha256": "23addffa140b4838fe9281799e69c97101e6eb06bc3e8aa376d0f5e7a679cfb2",
+      "sha256": "3be5f3c78394e2feee0c52c7be85c925a940a22cb879a46342f1a90b12148a53"
+    },
+    {
+      "name": "registry-deploy",
+      "file": "registry-deploy.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T22:17:42+0530",
+      "command": "gh run view 38303472047 -R vedanshun05/devops-heros --job 114992703983 --log | cut -f3- | rg 'Digest: sha256|Status: Downloaded newer image|STATUS: deployed|pod/taskboard.*Running|[{]\\\"status\\\":\\\"UP'",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        3,
+        6,
+        1915,
+        400
+      ],
+      "size": [
+        1912,
+        394
+      ],
+      "rawCaptureSha256": "e3b955a4ee1d11990d35bd1b60bbaf88b70271e2a1d0dcd4fb7d6c1a0b858fe4",
+      "sha256": "fada65de054206a466b1afe5744c4b31341ab3dc6bedfc18eeba3f42080205a6"
+    },
+    {
+      "name": "commit-history",
+      "file": "commit-history.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:26:10+0530",
+      "command": "git log --oneline -12",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        3,
+        6,
+        1175,
+        378
+      ],
+      "size": [
+        1172,
+        372
+      ],
+      "rawCaptureSha256": "732dfd6df27922d97b29e58e0212657c7d840afc521aec5976b600e17c2a024a",
+      "sha256": "37248e61fbc08a2598e23846f8b35b6287415003cafa33923fd0f41f2579809d"
+    },
+    {
+      "name": "trivy-ci",
+      "file": "trivy-ci.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T22:17:38+0530",
+      "command": "gh run view 38303472047 -R vedanshun05/devops-heros --job 114992098280 --log | cut -f3- | rg --color never 'INPUT_SEVERITY: HIGH,CRITICAL|Running Trivy with options:|Report Summary|│.*(Target|ghcr.io/|alpine 3\\.)'",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        3,
+        6,
+        1915,
+        400
+      ],
+      "size": [
+        1912,
+        394
+      ],
+      "rawCaptureSha256": "20cb6d2383e10598f0c2eabd31ad7f0336274aa0937078525f0abd890755a704",
+      "sha256": "6e1254e671f76f926ca0a2d63e08b5a3ace42096fcd2c2983280d0886ac618f3"
+    },
+    {
+      "name": "kubernetes",
+      "file": "kubernetes.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:27:01+0530",
+      "command": "kubectl get pods,svc -n taskboard",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        3,
+        6,
+        895,
+        356
+      ],
+      "size": [
+        892,
+        350
+      ],
+      "rawCaptureSha256": "c32930132c23462fac8d04928059e277e02facec77352cb963a5dd29475477cb",
+      "sha256": "a96da2d01363d8878a9ebc3fb8e72e5accc0f074ba6cee5cbfc9e6fa317246b5"
+    },
+    {
+      "name": "kubernetes-storage",
+      "file": "kubernetes-storage.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:27:02+0530",
+      "command": "{\nkubectl get pvc,ingress,hpa -n taskboard\nhelm list -n taskboard\nkubectl get application labboard -n argocd\n}",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        2,
+        6,
+        1715,
+        466
+      ],
+      "size": [
+        1713,
+        460
+      ],
+      "rawCaptureSha256": "ab9c6f91dc2757bac1b73babb1b9b09f080a3904cbe7d60cb11a05c7fc60325e",
+      "sha256": "81ff4c093996e40fe105c1586c8410eedbd4f261006008903d8cb7fcfddc0df2"
+    },
+    {
+      "name": "pvc-persistence",
+      "file": "pvc-persistence.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:29:33+0530",
+      "command": "{\ncurl -fsS -X POST http://localhost:3001/api/tasks -H \"Content-Type: application/json\" -d '{\"title\":\"Foot capture - persistence\",\"assignee\":\"Vedanshu\",\"priority\":\"HIGH\"}' | tee /tmp/labboard-foot-20261016/persistence-task.json\nprintf \"\\n\"\nTASK_ID=$(jq -r .id /tmp/labboard-foot-20261016/persistence-task.json)\nkubectl delete pod taskboard-postgres-0 -n taskboard\nkubectl rollout status statefulset/taskboard-postgres -n taskboard --timeout=180s\nkubectl wait --for=condition=Ready pod/taskboard-postgres-0 -n taskboard --timeout=180s\ncurl -fsS -w \"\\n\" \"http://localhost:3001/api/tasks/$TASK_ID\"\nkubectl get pvc -n taskboard\n}",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        2,
+        6,
+        1915,
+        628
+      ],
+      "size": [
+        1913,
+        622
+      ],
+      "rawCaptureSha256": "3ead970e492d5c156f1bb988d87786c8fe051db651104ebb1b01c2e8f1cc4be3",
+      "sha256": "f94fb8b72bd14b03f1a159e91382c381d109f2e8c4681f5b30496218805409d3"
+    },
+    {
+      "name": "terraform-init",
+      "file": "terraform-init.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:32:23+0530",
+      "command": "{\nterraform -chdir=terraform init -backend=false -input=false\nterraform -chdir=terraform fmt -check\nterraform -chdir=terraform validate\n}",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        2,
+        6,
+        815,
+        752
+      ],
+      "size": [
+        813,
+        746
+      ],
+      "rawCaptureSha256": "39020720b0955556d2e42768aa2490218d2e5db51e4f4f7bf2010787938b7516",
+      "sha256": "7ab23ed43a7d73f3b97c0f178a380d8e6d5edf7730ee7e809e09f808ed2ade58"
+    },
+    {
+      "name": "terraform-plan",
+      "file": "terraform-plan.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:40:05+0530",
+      "command": "AWS_CONFIG_FILE=/tmp/labboard-foot-20261016/aws-terraform-config AWS_PROFILE=foot-capture AWS_SDK_LOAD_CONFIG=1 terraform -chdir=terraform plan -input=false -no-color -var-file=/tmp/labboard-foot-20261016/plan-inputs.json -out=/tmp/labboard-foot-20261016/lab.tfplan | tail -28",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        2,
+        296,
+        796,
+        752
+      ],
+      "size": [
+        794,
+        456
+      ],
+      "rawCaptureSha256": "5f6f4409e575018e34f7fd567563b71fb7e9a350c847700bfa2170e6494adcee",
+      "sha256": "3c1c77959774a449741f8173adf69913199c436f5e09526424509e5459b73a85"
+    },
+    {
+      "name": "terraform-node-plan",
+      "file": "terraform-node-plan.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:45:32+0530",
+      "command": "terraform -chdir=terraform show -json /tmp/labboard-foot-20261016/lab.tfplan | jq '.resource_changes[] | select(.type==\"aws_eks_node_group\") | {resource:.address,actions:.change.actions,nodeGroup:{instance_types:.change.after.instance_types,ami_type:.change.after.ami_type,disk_size:.change.after.disk_size,scaling_config:.change.after.scaling_config}}'",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        3,
+        80,
+        952,
+        576
+      ],
+      "size": [
+        949,
+        496
+      ],
+      "rawCaptureSha256": "52e3d00a27b2a983eb34e2d8c35fc8ce3fe685e9ff939cdb5c6e44939d15599e",
+      "sha256": "08072aa1435493730a96014554cdaa44d1eba76c2ef00f941bd2b4d1b3f36519"
+    },
+    {
+      "name": "terraform-apply",
+      "file": "terraform-apply.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:56:42+0530",
+      "command": "AWS_CONFIG_FILE=/tmp/labboard-foot-20261016/aws-terraform-config AWS_PROFILE=foot-capture AWS_SDK_LOAD_CONFIG=1 terraform -chdir=terraform apply -input=false -no-color /tmp/labboard-foot-20261016/lab.tfplan",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        3,
+        733,
+        964,
+        1060
+      ],
+      "size": [
+        961,
+        327
+      ],
+      "rawCaptureSha256": "82e3e52332e9092f9da546d4dc00ff93dcd8eaba8903d2be4e124e12d3e5f577",
+      "sha256": "52cbf7b2f52d2296f8a39d34498c26dfa6bd28de23779ba30602d0b1bc22e407"
+    },
+    {
+      "name": "aws-infrastructure",
+      "file": "aws-infrastructure.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:56:50+0530",
+      "command": "{\naws ec2 describe-vpcs --region ap-south-1 --vpc-ids vpc-0c7cf8e38424738a7 --query 'Vpcs[].{Vpc:VpcId,State:State,CIDR:CidrBlock}' --output table\naws eks describe-cluster --region ap-south-1 --name session21-labboard --query 'cluster.{Name:name,Version:version,Status:status}' --output table\naws eks describe-nodegroup --region ap-south-1 --cluster-name session21-labboard --nodegroup-name lab-20261016162203994500000015 --query 'nodegroup.{Status:status,InstanceTypes:instanceTypes,Desired:scalingConfig.desiredSize,Health:health.issues}' --output json\nkubectl --kubeconfig /tmp/labboard-foot-20261016/eks-kubeconfig get nodes\n}",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        3,
+        190,
+        945,
+        774
+      ],
+      "size": [
+        942,
+        584
+      ],
+      "rawCaptureSha256": "892c42fe60f9b4a491c4b1c8c01c695a92e0dd7ea943574c833531ec4235c7f3",
+      "sha256": "120b269a5ef9244159d3e274d8e6625bfd070e2a169dfdf5a717538cfc292172"
+    },
+    {
+      "name": "aws-resources",
+      "file": "aws-resources.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:56:58+0530",
+      "command": "{\naws ec2 describe-subnets --region ap-south-1 --filters Name=vpc-id,Values=vpc-0c7cf8e38424738a7 --query 'Subnets[].{Subnet:SubnetId,Zone:AvailabilityZone,PublicIP:MapPublicIpOnLaunch}' --output table\naws ec2 describe-instances --region ap-south-1 --instance-ids i-050b60ab4f9df119a --query 'Reservations[].Instances[].{Instance:InstanceId,Type:InstanceType,State:State.Name,Subnet:SubnetId}' --output table\naws ecr describe-repositories --region ap-south-1 --query 'repositories[?starts_with(repositoryName, `session21-labboard`)].{Name:repositoryName,Tags:imageTagMutability,URI:repositoryUri}' --output table\n}",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        3,
+        212,
+        1255,
+        774
+      ],
+      "size": [
+        1252,
+        562
+      ],
+      "rawCaptureSha256": "9240476246c67fe239808cebbd83567e8b8ea6f688b0bb083688806eb79d79bc",
+      "sha256": "5cd5e26f7c698d5c1ced880855c192cbf906b91ff6dc5c82608804b18a08a4b2"
+    },
+    {
+      "name": "terraform-destroy",
+      "file": "terraform-destroy.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T22:14:30+0530",
+      "command": "AWS_CONFIG_FILE=/tmp/labboard-foot-20261016/aws-terraform-config AWS_PROFILE=foot-capture AWS_SDK_LOAD_CONFIG=1 terraform -chdir=terraform apply -input=false -no-color /tmp/labboard-foot-20261016/destroy.tfplan",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        3,
+        784,
+        995,
+        1060
+      ],
+      "size": [
+        992,
+        276
+      ],
+      "rawCaptureSha256": "a1df7f46967c4a58fcfe25d53d8f9131d4bf0b2f175274ac439a39f291800a8a",
+      "sha256": "332fad4290d014af8efd9c372e3aab4533eab16fbae788f382b51c712b6b50dc"
+    },
+    {
+      "name": "aws-cleanup",
+      "file": "aws-cleanup.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T22:15:07+0530",
+      "command": "{\nterraform -chdir=terraform state list | jq -R -sc '{TerraformResources:(split(\"\\n\")|map(select(length>0)))}'\naws eks list-clusters --region ap-south-1 --query '{EKSClusters:clusters[?starts_with(@, `session21-labboard`)]}' --output json | jq -c .\naws ec2 describe-vpcs --region ap-south-1 --filters Name=tag:Project,Values=LabBoard --query '{VPCs:Vpcs[].VpcId}' --output json | jq -c .\naws ecr describe-repositories --region ap-south-1 --query '{ECRRepositories:repositories[?starts_with(repositoryName, `session21-labboard`)].repositoryName}' --output json | jq -c .\naws ec2 describe-instances --region ap-south-1 --instance-ids i-050b60ab4f9df119a --query '{Worker:Reservations[].Instances[].{ID:InstanceId,State:State.Name}}' --output json | jq -c .\naws kms describe-key --region ap-south-1 --key-id 63c87520-78f7-4a67-bf8b-e0dcbaf404cd --query '{PreviousKey:{State:KeyMetadata.KeyState,DeleteAfter:KeyMetadata.DeletionDate}}' --output json | jq -c .\naws kms describe-key --region ap-south-1 --key-id 075860b1-b9c4-4c18-90da-195b659910c2 --query '{CaptureKey:{State:KeyMetadata.KeyState,DeleteAfter:KeyMetadata.DeletionDate}}' --output json | jq -c .\n}",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        3,
+        278,
+        945,
+        488
+      ],
+      "size": [
+        942,
+        210
+      ],
+      "rawCaptureSha256": "bbef8e1c5d60f2faf99ecdb0089336086af5c5161708c3c94c5da7f756e6858a",
+      "sha256": "26c28d06ddd8efe53248ef035536553656df6f9516af3aa94e338bafd21138a5"
+    },
+    {
+      "name": "metrics",
+      "file": "metrics.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:32:14+0530",
+      "command": "{\nkubectl exec -n taskboard deployment/taskboard-taskboard-backend -c backend -- python -c 'from urllib.request import urlopen; print(urlopen(\"http://localhost:8000/metrics\").read().decode())' | rg \"^(http_requests_total|process_resident_memory_bytes|process_cpu_seconds_total|http_request_duration_seconds_count)\"\n}",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        3,
+        6,
+        1914,
+        400
+      ],
+      "size": [
+        1911,
+        394
+      ],
+      "rawCaptureSha256": "90f961cfa4f8800160849151c302a84583e185156b91274bb713eab9e170b695",
+      "sha256": "761829d61e2b9b7201db01d6629b980911a977c600af648b2c641139e98b177f"
+    },
+    {
+      "name": "gitops-self-heal",
+      "file": "gitops-self-heal.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:33:28+0530",
+      "command": "{\nkubectl get deployment taskboard-frontend -n taskboard\nkubectl scale deployment taskboard-frontend -n taskboard --replicas=1\nkubectl get deployment taskboard-frontend -n taskboard\nkubectl wait --for=jsonpath='{.spec.replicas}'=2 deployment/taskboard-frontend -n taskboard --timeout=180s\nkubectl rollout status deployment/taskboard-frontend -n taskboard --timeout=180s\nkubectl wait --for=jsonpath='{.status.health.status}'=Healthy application/labboard -n argocd --timeout=120s\nkubectl get deployment taskboard-frontend -n taskboard\nkubectl get application labboard -n argocd\n}",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        2,
+        6,
+        1115,
+        620
+      ],
+      "size": [
+        1113,
+        614
+      ],
+      "rawCaptureSha256": "51f63a2f452bf267b56cec9ec4aac42f2cffd9e09ea69c68015e38d7f81ab5aa",
+      "sha256": "43416f629a1ecc5150b20a5847838497a17c9f79e56a5093722af414260993fe"
+    },
+    {
+      "name": "troubleshooting-failures",
+      "file": "troubleshooting-failures.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:31:21+0530",
+      "command": "{\nkubectl apply -f troubleshooting/broken-image.yaml -f troubleshooting/broken-service.yaml\nkubectl wait --for=jsonpath='{.status.containerStatuses[0].state.waiting.reason}'=ImagePullBackOff pod -l app=broken-image -n taskboard --timeout=90s\nkubectl get pods -l app=broken-image -n taskboard\nkubectl get events -n taskboard --field-selector reason=Failed --sort-by=.lastTimestamp | tail -4\nkubectl get svc broken-service -n taskboard -o jsonpath='{.spec.selector}{\"\\n\"}{.spec.ports}{\"\\n\"}'\nkubectl get endpointslices -n taskboard -l kubernetes.io/service-name=broken-service\nkubectl get pods -n taskboard -l app=taskboard-backend --show-labels\n}",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        2,
+        6,
+        1915,
+        664
+      ],
+      "size": [
+        1913,
+        658
+      ],
+      "rawCaptureSha256": "4aa09d4b2e90e19bee7ab649bec494e68c0d6476089fe2889b389c123d82ea89",
+      "sha256": "3f5bc599b91a5809888415a24a9a8187d0f9c37ea72adbef17458f80ef032ddb"
+    },
+    {
+      "name": "troubleshooting",
+      "file": "troubleshooting.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:32:13+0530",
+      "command": "{\nkubectl get deployment taskboard-taskboard-backend -n taskboard -o json | jq '{spec:{template:{spec:.spec.template.spec}}}' | kubectl patch deployment taskboard-broken-image -n taskboard --type=merge --patch-file=/dev/stdin\nkubectl rollout status deployment/taskboard-broken-image -n taskboard --timeout=120s\nkubectl get pods -n taskboard -l app=broken-image\nkubectl patch svc broken-service -n taskboard --type=merge -p '{\"spec\":{\"selector\":{\"app\":\"taskboard-backend\"},\"ports\":[{\"port\":8080,\"targetPort\":8000}]}}'\nsleep 2\nkubectl get endpointslices -n taskboard -l kubernetes.io/service-name=broken-service\nkubectl exec -n taskboard deployment/taskboard-taskboard-backend -c backend -- python -c 'from urllib.request import urlopen; print(urlopen(\"http://broken-service:8080/health\", timeout=10).read().decode())'\n}",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        2,
+        6,
+        1915,
+        620
+      ],
+      "size": [
+        1913,
+        614
+      ],
+      "rawCaptureSha256": "bdfe1095bb92e178bef27afdc099f6416f72dc968338b85cd6985dcbd2ed0ab3",
+      "sha256": "2f2183a7d0b5f53b68f03363c4ca87ce036cb4756a4d8caa4d9c15d4401998ff"
+    },
+    {
+      "name": "docker-compose-build",
+      "file": "docker-compose-build.png",
+      "terminal": "Foot",
+      "capturedAt": "2026-10-16T21:34:23+0530",
+      "command": "docker compose -p session21-homework up --build -d",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "crop": [
+        3,
+        872,
+        640,
+        1060
+      ],
+      "size": [
+        637,
+        188
+      ],
+      "rawCaptureSha256": "82713924adfdd352f6098d01d2b56ff71d4b6d1ef31f9d360e956a2d257dbf50",
+      "sha256": "7b54e052e8231575adcd4e8bc11e9700d7c176bd3870d0d08467e015ad2813f0"
+    }
+  ],
+  "otherCrops": [
+    {
+      "file": "github-repository.png",
+      "originalSize": [
+        1440,
+        1000
+      ],
+      "crop": [
+        0,
+        74,
+        1440,
+        938
+      ],
+      "size": [
+        1440,
+        864
+      ],
+      "rawCaptureSha256": "013151e4f4296f1c08fcf80066a02003ef60d88f369cc988d67338cde9a3305a",
+      "sha256": "63881a2937dae4b3cb9bafd20ea8f682ca9beea1f8e576f84b8ded85918a08c9"
+    },
+    {
+      "file": "github-pipeline.png",
+      "originalSize": [
+        1440,
+        1000
+      ],
+      "crop": [
+        0,
+        74,
+        1440,
+        625
+      ],
+      "size": [
+        1440,
+        551
+      ],
+      "rawCaptureSha256": "a10cba0237de1634d520c1fe02dd5b0b59fec4e93f65f866589b738fd2e41924",
+      "sha256": "ab853d341311649f8b6a43d60a17625a8f77a521842be3eeeaf2988e726b7e64"
+    },
+    {
+      "file": "prometheus-targets.png",
+      "originalSize": [
+        1440,
+        1000
+      ],
+      "crop": [
+        0,
+        0,
+        1440,
+        500
+      ],
+      "size": [
+        1440,
+        500
+      ],
+      "rawCaptureSha256": "c2207605c3a679f5a3fb3a75e95ab45c5e71a7c99a68f455158b897abb49d552",
+      "sha256": "a07efe0a98e263c0720c7c0b12dcd60d79d3d9a886c988596c0e6af587182fbc"
+    },
+    {
+      "file": "grafana-dashboard.png",
+      "originalSize": [
+        1440,
+        1000
+      ],
+      "crop": [
+        0,
+        0,
+        1440,
+        610
+      ],
+      "size": [
+        1440,
+        610
+      ],
+      "rawCaptureSha256": "bd61ece6747bad8829f46aa2d5614bf6c4f14db48f6cad9dcc84121881a288b8",
+      "sha256": "459da8608e59818ecc37fadcb2e1539758eaea6bcd6641a93a53e5cdefad8414"
+    }
+  ]
+}
