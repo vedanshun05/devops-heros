@@ -4,7 +4,7 @@
 
 [Overview](#overview) · [Demo](#demo-and-deliverables) · [Run locally](#run-locally) · [Architecture](#architecture) · [Screenshots](#evidence) · [Technical guide](#technical-guide)
 
-**[Watch the demo on Loom →](https://www.loom.com/share/dc6cd8f27360475b8d9eb04c1765e7db)**
+**[Watch the demo video →](../demo/LabBoard-Demo.mp4)**
 
 ## Overview
 
@@ -23,12 +23,12 @@ The project extends the supplied TaskBoard reference with my own lab domain, int
 
 ## Demo and deliverables
 
+Both submission files are in the repository-root [`demo/`](../demo/) folder. It contains only the video and PowerPoint.
+
 | Material | Open it |
 | :-- | :-- |
-| Recorded walkthrough | **[Watch on Loom](https://www.loom.com/share/dc6cd8f27360475b8d9eb04c1765e7db)** |
-| PowerPoint | [14-slide presentation](deliverables/LabBoard-Session21.pptx) — what, why, how, stack, trade-offs and the four required screenshots |
-| Editable presentation | [OmaShow deck](deliverables/LabBoard-Session21.omashow) — Inter typography, fade transitions, click-controlled reveals and speaker notes |
-| Recording notes | [Video script](deliverables/VIDEO-SCRIPT.md) — preparation, narration, screen actions and cleanup; target 1:50, under 2 minutes |
+| Recorded walkthrough | [Demo video (MP4)](../demo/LabBoard-Demo.mp4) · [Watch on Loom](https://www.loom.com/share/dc6cd8f27360475b8d9eb04c1765e7db) |
+| PowerPoint | [14-slide presentation](../demo/LabBoard-Session21.pptx) — what, why, how, stack, trade-offs and the four required screenshots |
 
 ## Run locally
 
